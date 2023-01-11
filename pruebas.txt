@@ -1,0 +1,26 @@
+class Persona(models.Model):
+    nombre = models.CharField(max_length=50, blank=True)
+    apellido = models.CharField(max_length=50, blank=True)
+
+
+
+
+
+
+class PersonaForm(forms.Form):
+
+  nombre = forms.CharField(
+  max_length=50,
+  required=True,
+  error_messages={'required': 'Este campo es requerido'},
+  validators=[RegexValidator(r'^[a-zA-Z]{3:50}$', 'Solo se permiten letras en este campo.'),MinLengthValidator(3,'Minimo 3 letras')],
+  widget=TextInput(attrs={'placeholder': 'Ingrese su nombre', 'required': False})  # Ocultar el mensaje "Por favor, rellene este campo"
+  )
+
+  apellido = forms.CharField(
+  max_length=50,
+  required=True,
+  error_messages={'required': 'Este campo es requerido'},
+  validators=[RegexValidator(r'^[a-zA-Z]{3:50}$', 'Solo se permiten letras en este campo.'),MinLengthValidator(3,'Minimo 3 letras')],
+  widget=TextInput(attrs={'placeholder': 'Ingrese su nombre', 'required': None})  # Ocultar el mensaje "Por favor, rellene este campo"
+  )
