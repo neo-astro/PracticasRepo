@@ -78,12 +78,12 @@
           <a class="me-1" href="">
             <img class="bi me-1 bg" src="https://cdn-icons-png.flaticon.com/512/2356/2356780.png" class="me-2"
               height="18px" width="18px" alt=""></a>
-          </a>
+    
 
-          <a class="me-1" href="">
+          <a class="me-1" href="" data-bs-toggle="modal"  data-bs-target="#exampleModalAsiganacion">
             <img class="bi me-1 bg" src="https://cdn-icons-png.flaticon.com/512/6208/6208458.png" class="me-2"
               height="18px" width="18px" alt=""></a>
-          </a>
+
 
           <a data-bs-toggle="modal" data-bs-target="#exampleModal1" class="me-1  text-black" id="delUser" onclick="del(this)" href="/usuario/eliminar/{{usuario.N_Identificacion}}/">
             <svg class="bi me-1" width="18px" height="18px">
@@ -154,8 +154,6 @@
 <script src="//geodata.solutions/includes/countrystatecity.js"></script>
 
 <!-- modal crear usuario formulario -->
-
-
 <div class="modal bd-example-modal-lg " id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-lg"  >
     <div class="modal-content">
@@ -317,7 +315,6 @@
                         <option value="" selected disabled>Seleciona la provincia</option>
                       </select> -->
 
-
                       {{ form.Ciudad|add_class:"form-control drop" }}
                       <span class="myerror">{{ form.Ciudad.errors }}</span>
                     </div>
@@ -354,16 +351,15 @@
 
       </div>
 
-
-    
-    
-
     </div>
   </div>
 </div>
   
+
+
+
   
-<!-- modal -->
+<!-- modal eliminar -->
 <div class="modal " id="exampleModal1" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog"  >
     <div class="modal-content">
@@ -382,6 +378,75 @@
 
 
 
+<!-- modal asignar-->
+<div class="modal " id="exampleModalAsiganacion" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog"  >
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+
+
+      <div class="row text-center p-2">
+        <button class="col  m-2 btn" data-target="#formularioEstudiante">
+          <img src="https://cdn-icons-png.flaticon.com/512/2784/2784403.png" class="me-2"  height="80px" width="80px" alt="">
+          <div class="mx-auto fw-bold">Estudiante</div>
+        </button>
+
+        
+        <div class="col fw-semibold ">
+            Asignar nuevo 
+        </div>
+
+
+
+        <button class="col m-2 p-2 btn" data-target="#formularioProfesor">
+          <img src="https://cdn-icons-png.flaticon.com/512/3429/3429433.png"  class="me-2"  height="80px" width="80px" alt="">
+          <div class="mx-auto fw-bold">Profesor</div>
+        </button>
+      </div>
+
+
+
+    <!-- formularios para asignar estudiante y profesor -->
+    <form action="http://127.0.0.1:8000/asignarEstudiante/"  method="POST" class="d-none" id="formularioEstudiante">
+      {% csrf_token %}
+    
+    
+      <select  class="invisible" name="usua" id="id_usua">
+        <option value="0705117935" selected>usuario selecionado</option>
+      </select>
+      
+      {{formEstudiante.Nom_carr}} 
+      {{formEstudiante.Fecha_Inici}}
+      <input type="submit" class="mx-auto btn btn-dark mt-2 w-50 fw-bold" value="Enviar">
+    
+    </form>
+    
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+<!-- 
+<form action="http://127.0.0.1:8000/asignarEstudiante/">
+  {% csrf_token %}
+
+
+  <select  class="invisible" name="usua" id="id_usua">
+    <option value="0705117935" selected>usuario selecionado</option>
+  </select>
+  
+  {{formProfesor.Fecha_Inici}} 
+  {{formProfesor.Estado}}
+  <input type="submit" class="mx-auto btn btn-dark mt-2 w-50 fw-bold" value="Enviar">
+
+</form> -->
 
 <script type="text/javascript">
 

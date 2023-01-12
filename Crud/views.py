@@ -40,7 +40,12 @@ def ApiCiudad(reques,nombre_provincia):
 
 def usuario(request):
   if request.method == 'POST':
+    ciudadData = ciudad.objects.get(pk = request.POST.get('Ciudad'))
+    provinciaData = provincia.objects.get(pk = request.POST.get('Provincia'))
     formUsuario = usuariosForm(request.POST)
+    formUsuario.fields['Ciudad'].queryset = ciudad.objects.filter(pk=ciudadData.pk)
+    formUsuario.fields['Provincia'].queryset = provincia.objects.filter(pk=provinciaData.pk)
+
 
     print(f'Ingreso Post,  {formUsuario}')
     if formUsuario.is_valid():
@@ -57,7 +62,7 @@ def usuario(request):
       # form.cleaned_data['Provincia']
       # print(usuariosForm(request.POST))
       print(request.POST)
-      error ="error"
+      error = "error"
       form = usuariosForm(request.POST)
       pais_pk = form['Pais'].data
       provincia_pk = form['Provincia'].data
