@@ -53,6 +53,10 @@
 }
 
 
+.text-hover:hover  {
+  background-color: rgba(224, 224, 224, 0.658);
+}
+
 .roundered-8{
   border-radius: 25%;
 }

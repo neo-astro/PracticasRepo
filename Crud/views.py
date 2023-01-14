@@ -1,8 +1,8 @@
 import json
-from django.shortcuts import HttpResponse, redirect, render
+from django.shortcuts import HttpResponse, redirect, render,get_object_or_404
 from django.forms import modelform_factory
 
-from Crud.models import tpi, usuarios, usuariosForm,provincia,ciudad,alumnosForm,alumnos,carrera
+from Crud.models import profesoresForm, tpi, usuarios, usuariosForm,provincia,ciudad,alumnosForm,alumnos,carrera
 
 # from Crud.models import  usuarios,tpi
 
@@ -95,19 +95,29 @@ def usuario(request):
       listaUsuarios = usuarios.objects.all()
       return render(request, '_usuario.html',{'form':form,'error':error,'usuarios':listaUsuarios})
   form = usuariosForm()
+  formProfesor = profesoresForm()
+  formEstudiante = alumnosForm()
   listaUsuarios = usuarios.objects.all()
-  return render(request, '_usuario.html',{'form':form,'usuarios':listaUsuarios})
+  return render(request, '_usuario.html',{'form':form,'usuarios':listaUsuarios,'formEstudiante':formEstudiante,'formProfesor':  formProfesor})
 
 
 
-def updateUser(request, N_Identificacion):
-  usuario = usuarios.objects.get(N_Identificacion=N_Identificacion)
-  usuario.delete()
-  return redirect('usuario')
+
+
+
+def updateUsuario(request, N_Identificacion):
+  if request.method == 'POST':
+    pass
+  else:
+    usuario = usuarios.objects.get(pk=N_Identificacion)
+    # usuario = get_object_or_404(usuarios, pk=N_Identificacion)
+    print(f'dato ${usuario}')
+    form = usuariosForm()
+    return render(request,'_usuarioUpdate.html',{'form':form})
 
 
 def deleteUser(request, N_Identificacion):
-  usuario = usuarios.objects.get(N_Identificacion=N_Identificacion)
+  usuario = usuarios.objects.get(pk=N_Identificacion)
   usuario.delete()
   return redirect('usuario')
 

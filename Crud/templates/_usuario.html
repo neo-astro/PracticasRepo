@@ -75,17 +75,17 @@
 
         <div class="col text-end">
 
-          <a class="me-1" href="">
+          <a class="me-1" href="/usuario/update/{{usuario.N_Identificacion}}/" title="Actualizar">
             <img class="bi me-1 bg" src="https://cdn-icons-png.flaticon.com/512/2356/2356780.png" class="me-2"
               height="18px" width="18px" alt=""></a>
     
 
-          <a class="me-1" href="" data-bs-toggle="modal"  data-bs-target="#exampleModalAsiganacion">
+          <a class="me-1" href="" data-bs-toggle="modal" title="Asignar rol" data-user={{usuario.N_Identificacion}} onclick="btnAsignar(this),resetForms()" data-bs-target="#exampleModalAsiganacion" >
             <img class="bi me-1 bg" src="https://cdn-icons-png.flaticon.com/512/6208/6208458.png" class="me-2"
               height="18px" width="18px" alt=""></a>
 
 
-          <a data-bs-toggle="modal" data-bs-target="#exampleModal1" class="me-1  text-black" id="delUser" onclick="del(this)" href="/usuario/eliminar/{{usuario.N_Identificacion}}/">
+          <a data-bs-toggle="modal" data-bs-target="#exampleModal1" title="Eliminar" class="me-1  text-black" id="delUser" onclick="del(this)" href="/usuario/eliminar/{{usuario.N_Identificacion}}/">
             <svg class="bi me-1" width="18px" height="18px">
               <use xlink:href="#delete" />
             </svg>
@@ -252,9 +252,9 @@
 
                     <div class="form-group campform {% if form.Fecha_Nac.errors %}has-error{% endif %}">
                       <labe class="control-label">{{form.Fecha_Nac.label_tag }}</labe>
-                      <!-- <input type="date" id="Fecha_Nac" value="{{ form.Fecha_Nac.value }}" name="Fecha_Nac" class="form-control" placeholder="dd/mm/aa"> -->
+                      <input type="date" id="Fecha_Nac" value="{{ form.Fecha_Nac.value }}" name="Fecha_Nac" class="form-control" placeholder="dd/mm/aa">
 
-                      {{ form.Fecha_Nac|add_class:"form-control " }}
+                      <!-- {{ form.Fecha_Nac|add_class:"form-control " }} -->
                       <span class="myerror">{{ form.Fecha_Nac.errors }}</span>
 
                     </div>
@@ -379,6 +379,73 @@
 
 
 <!-- modal asignar-->
+<!-- <div class="modal " id="exampleModalAsiganacion" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog"  >
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+
+
+      <div class="row text-center p-2">
+        <a class="col  m-2 btn text-hover" data-bs-toggle="modal" data-target="#formularioEstudiante">
+          <img src="https://cdn-icons-png.flaticon.com/512/2784/2784403.png" class="me-2 "  height="80px" width="80px" alt="">
+          <p class="mx-auto fw-bold">Estudiante</p>
+        </a>
+
+     
+        
+        <div class="col fw-semibold">
+            Asignar nuevo 
+        </div>
+
+
+
+        <a class="col m-2 p-2 btn text-hover"  data-bs-toggle="modal"  data-target="#formularioProfesor">
+          <img src="https://cdn-icons-png.flaticon.com/512/3429/3429433.png"  class="me-2"  height="80px" width="80px" alt="">
+          <p class="mx-auto fw-bold">Profesor</p>
+        </a>
+      </div> -->
+
+
+
+
+
+    <!-- formularios para asignar estudiante y profesor -->
+    <!-- <form action="http://127.0.0.1:8000/asignarEstudiante/"  method="POST" >
+      {% csrf_token %}
+    
+    
+      <select  class="invisible" name="usua" id="id_usua">
+        <option value="" id="selectUsuHidden" selected>usuario selecionado</option>
+      </select>
+      
+
+      <div class="row {% if formEstudiante.Nom_carr.errors %}has-error{% endif %}" >
+          <labe class="control-label">{{formEstudiante.Nom_carr.label_tag }}</labe>
+          {{ formEstudiante.Nom_carr|add_class:"form-control w-50" }}
+          <span class="myerror">{{ formEstudiante.Nom_carr.errors }}</span>
+      </div>
+
+
+      <div class="row {% if formEstudiante.Fecha_Inici.errors %}has-error{% endif %}" >
+        <labe class="control-label">{{formEstudiante.Fecha_Inici.label_tag }}</labe>
+        {{ formEstudiante.Fecha_Inici|add_class:"form-control w-50" }}
+        <span class="myerror">{{ formEstudiante.Fecha_Inici.errors }}</span>
+      </div>
+
+      <input type="submit" class="mx-auto btn btn-dark mt-2 w-50 fw-bold" value="Enviar">
+    
+    </form>
+
+    
+
+    </div>
+  </div>
+</div> -->
+
+
+
 <div class="modal " id="exampleModalAsiganacion" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog"  >
     <div class="modal-content">
@@ -388,40 +455,116 @@
 
 
       <div class="row text-center p-2">
-        <button class="col  m-2 btn" data-target="#formularioEstudiante">
-          <img src="https://cdn-icons-png.flaticon.com/512/2784/2784403.png" class="me-2"  height="80px" width="80px" alt="">
-          <div class="mx-auto fw-bold">Estudiante</div>
-        </button>
+       
 
+       
+
+        <a class="col m-2 btn text-hover" id="verFormEstudiante" onclick="visualizarFormEstudiante()" >
+          <img src="https://cdn-icons-png.flaticon.com/512/2784/2784403.png" class="me-2 "  height="80px" width="80px" alt="">
+          <p class="mx-auto fw-bold">Estudiante</p>
+        </a>
+
+     
         
-        <div class="col fw-semibold ">
+        <div class="col fw-semibold">
             Asignar nuevo 
         </div>
 
 
 
-        <button class="col m-2 p-2 btn" data-target="#formularioProfesor">
+        <a class="m-2 col p-2 btn text-hover" id="verFormProfesor" onclick="visualizarFormProfesor()" >
           <img src="https://cdn-icons-png.flaticon.com/512/3429/3429433.png"  class="me-2"  height="80px" width="80px" alt="">
-          <div class="mx-auto fw-bold">Profesor</div>
-        </button>
+          <p class="mx-auto fw-bold">Profesor</p>
+        </a>
       </div>
 
 
 
-    <!-- formularios para asignar estudiante y profesor -->
-    <form action="http://127.0.0.1:8000/asignarEstudiante/"  method="POST" class="d-none" id="formularioEstudiante">
-      {% csrf_token %}
-    
-    
-      <select  class="invisible" name="usua" id="id_usua">
-        <option value="0705117935" selected>usuario selecionado</option>
-      </select>
+
+      <!-- formulario estudiante     -->
+      <form action="http://127.0.0.1:8000/asignarEstudiante/" class="d-none" id="formEstudiante" method="POST" >
+
+        {% csrf_token %}
+        <select  class="invisible col" name="usua" id="id_usua">
+          <option value="" id="selectUsuHidden" selected>usuario selecionado</option>
+        </select>
+        <div class="row">
+
+          <div class="col-12 mb-2">
+            <div class="row  {% if formEstudiante.Nom_carr.errors %}has-error{% endif %}" >
+              <labe class="control-label col-4 text-center ">{{formEstudiante.Nom_carr.label_tag }}</labe>
+              {{ formEstudiante.Nom_carr|add_class:"form-control w-50 col-4" }}
+              <span class="myerror">{{ formEstudiante.Nom_carr.errors }}</span>
+            </div>
+          </div>
+
+          <div class="col-12 mb-2">
+            <div class="row {% if formEstudiante.Fecha_Inici.errors %}has-error{% endif %}" >
+              <labe class="col-4 control-label text-center">{{formEstudiante.Fecha_Inici.label_tag }}</labe>
+              <input type="date" id="Fecha_Nac" value="{{ formEstudiante.Fecha_Inici.value }}" name="Fecha_Inici" class="form-control col-4 w-50" placeholder="dd/mm/aa">
+              <span class="myerror">{{ formEstudiante.Fecha_Inici.errors }}</span>
+            </div>  
+          </div>
+
+
+        </div>
       
-      {{formEstudiante.Nom_carr}} 
-      {{formEstudiante.Fecha_Inici}}
-      <input type="submit" class="mx-auto btn btn-dark mt-2 w-50 fw-bold" value="Enviar">
+
+        <div class="col-12 text-center mt-2 mb-2">
+          <input type="submit" class="btn btn-dark w-50 fw-bold" value="Enviar">
+        </div>
+        
+
+      
+      </form>
+
+
+<!-- formulario pro -->
+
+      <form action="http://127.0.0.1:8000/asignarProfesor/" class="d-none" id="formProfesor">
+        {% csrf_token %}
+      
+      
+        <select  class="invisible" name="usua" id="id_usua">
+          <option value="" selected>usuario selecionado</option>
+        </select>
+        
+        <div class="row">
+      
+          <div class="col-12 mb-2">
+            <div class="row  {% if formEstudiante.Nom_carr.errors %}has-error{% endif %}" >
+              <labe class="control-label col-4 text-center ">{{formProfesor.Estado.label_tag }}</labe>
+              {{ formProfesor.Estado|add_class:"rounded-circle w-50 col-4" }}
+              <span class="myerror">{{ formProfesor.Estado.errors }}</span>
+            </div>
+          </div>
+      
+          <div class="col-12 mb-2">
+            <div class="row {% if formProfesor.Fecha_Inici.errors %}has-error{% endif %}" >
+              <labe class="col-4 control-label text-center">{{formProfesor.Fecha_Inic.label_tag }}</labe>
+              <input type="date" id="Fecha_Nac" value="{{ formProfesor.Fecha_Inic.value }}" name="Fecha_Inici" class="form-control col-4 w-50" placeholder="dd/mm/aa">
+              <span class="myerror">{{ formProfesor.Fecha_Inici.errors }}</span>
+            </div>  
+          </div>
+      
+      
+        </div>
+      
+
+        
+        <div class="col-12 text-center mt-2 mb-2">
+          <input type="submit" class="btn btn-dark w-50 fw-bold" value="Enviar">
+        </div>
+        
+
+      
+      </form>
     
-    </form>
+        <!-- {{formProfesor.Fecha_Inici}} 
+        {{formProfesor.Estado}}
+        <input type="submit" class="mx-auto btn btn-dark mt-2 w-50 fw-bold" value="Enviar">
+       -->
+      
     
 
     </div>
@@ -492,7 +635,30 @@
   function del(e) {
     document.getElementById('confirm').innerHTML = `<a  class="btn btn-danger" href='${e.href}'>Eliminar</a >`
   }
+  
+  function btnAsignar(e){
+    $inputNident = document.getElementById('selectUsuHidden')
+    $inputNident.value  = e.getAttribute('data-user')
+    console.log('valor option', $inputNident.value)
+  }
+  
+  // visualizar Formularios
+  function visualizarFormProfesor(){
+    d.getElementById('formProfesor').classList.remove('d-none')
+    d.getElementById('formEstudiante').classList.add('d-none')
 
+  }
+
+  function visualizarFormEstudiante(){
+    d.getElementById('formEstudiante').classList.remove('d-none')
+    d.getElementById('formProfesor').classList.add('d-none')
+
+  }
+
+  function resetForms(){
+    d.getElementById('formProfesor').classList.add('d-none')
+    d.getElementById('formEstudiante').classList.add('d-none')
+  }
 
 //con el codgio del selst dinamico descargado
   // document.querySelectorAll('input').forEach(function(input){

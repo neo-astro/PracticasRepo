@@ -1,88 +1,689 @@
-{% extends 'index.html' %}
-{% block content %}
+{% extends "index.html" %}
 
 
-<div class=" bg-secondary h-100">
-  <div style="height: 50px;" class="container-100 bg-dark border-end">
-    <h1 class="text-light text-center fw-bold">Listado de estudiantes</h1>
+{% block contend %}
+
+{% load widget_tweaks %}
+<link rel="stylesheet" href="../static/css/styles.css">
+
+
+
+
+
+
+
+
+
+<!-- contenido estudiante  -->
+<div class="d-flex flex-column align-items-stretch  bg-light" style="width: 700px;">
+
+  <div class="container-fluid mx-auto text-center bg-dark text-decoration-none text-light mb-1">
+    <svg class="bi mt-1 me-2" width="40" height="40">
+      <use xlink:href="#userPerfil" />
+    </svg>
+    <p class="fs-5 mb-2 fw-semibold">Lista de Usuarios</p>
   </div>
 
-  <div class="container-lg mt-1 mr-5">
-    <table class="table table-secondary table-bordered table-striped">
-  
-        <thead class="text-center">
-            <tr>
-              <th class="col-1 align-middle">Nombre</th>
-              <th class="col-1 align-middle">Apellido paterno</th>
-              <th class="col-1 align-middle">Apellido materno</th>
-              <th class="col-1 align-middle">Fecha de nacimiento</th>
-              <th class="col-1 align-middle">Identificacion</th>
-              <th class="col-1 align-middle">Tipo de Identificacion</th>
-              <th class="col-1 align-middle">Pais</th>
-              <th class="col-1 align-middle">Provincia</th>
-              <th class="col-1 align-middle">Canton/Recinto</th>
-              <th class="col-1 align-middle">Telefono</th>
-              <th class="col-2 align-middle">Acciones</th>
-            </tr>
-        </thead>
-        
-        <tbody>
-          <tr class="text-center">
-            
-  
-            <td class="align-middle">1</td>
-            <td class="align-middle">1</td>
-            <td class="align-middle">1</td>
-            <td class="align-middle">1</td>
-            <td class="align-middle">1</td>
-            <td class="align-middle">1</td>
-            <td class="align-middle">1</td>
-            <td class="align-middle">1</td>
-            <td class="align-middle">1</td>
-            <td class="align-middle">1</td>
-            <td>
-              <a class="btn btn-success w-100" href="/updateEstudiante">Actualizar</a>
-              <a class="btn btn-danger w-100 mt-1" onclick="del(this)" id="delUser" href="https://getbootstrap.esdocu.com/docs/5.1/utilities/vertical-align/" data-bs-toggle="modal" data-bs-target="#exampleModal">Eliminar</a>
-          </td>
-  
-  
-  
-  
-  
-            <!-- estado -->
-            <!-- <td>
-              <div class="btn-status-success center"></div>
-          </td>
-          <td>
-              <div class="btn-status-danger center"></div>
-          </td> -->
-  
-          </tr>
-        </tbody>
-  
-      </table>
+
+
+  <div class="list-group list-group-flush border-bottom  scrollarea">
+
+    <!-- elementos usuario -->
+    {% for usuario in usuarios %}
+    <div href="#" class="list-group-item list-group-item-action py-3 rounded-bottom lh-tight" aria-current="true">
+
+      <div class="d-flex w-100 align-items-center justify-content-between">
+        <strong class="mb-1">{{usuario.Nombre}} {{usuario.Apellido_P}} {{usuario.Apellido_M}}</strong>
+        <!-- <small class="fw-bold"> Software</small> -->
+      </div>
+
+      <div class="row">
+
+
+
+        <div class="col-6">
+
+          <div class="d-flex justify-content-between align-items-center ">
+            <img src="https://cdn-icons-png.flaticon.com/512/1144/1144709.png" class="me-2" height="30px" width="30px"
+              alt="">
+
+            <div class="m-lg-1  d-flex">
+              <div class="d-flex">
+                <img width="18px" height="18px" class="me-2" src="https://cdn-icons-png.flaticon.com/512/126/126509.png"
+                  alt="">
+                <div>{{usuario.Telf_Celular}}</div>
+              </div>
+            </div>
+
+            <div class=" m-lg-1 d-flex">
+              <img width="18px" height="18px" class="me-2" src="https://cdn-icons-png.flaticon.com/512/4097/4097494.png"
+                alt="">
+              <!-- <svg class="bi me-2" width="18" height="18"><use xlink:href="#location"/></svg> -->
+              <div class="d-flex">
+                <div>{{usuario.Pais}}</div>
+                /
+                <div>{{usuario.Provincia}}</div>
+                /
+                <div>{{usuario.Ciudad}}</div>
+              </div>
+
+            </div>
+          </div>
+
+        </div>
+
+
+        <div class="col text-end">
+
+          <a class="me-1" href="" title="Actualizar">
+            <img class="bi me-1 bg" src="https://cdn-icons-png.flaticon.com/512/2356/2356780.png" class="me-2"
+              height="18px" width="18px" alt=""></a>
+    
+
+          <a class="me-1" href="" data-bs-toggle="modal" title="Asignar rol" data-user={{usuario.N_Identificacion}} onclick="btnAsignarEst(this)" data-bs-target="#exampleModalAsiganacion" >
+            <img class="bi me-1 bg" src="https://cdn-icons-png.flaticon.com/512/6208/6208458.png" class="me-2"
+              height="18px" width="18px" alt=""></a>
+
+
+          <a data-bs-toggle="modal" data-bs-target="#exampleModal1" title="Eliminar" class="me-1  text-black" id="delUser" onclick="del(this)" href="/usuario/eliminar/{{usuario.N_Identificacion}}/">
+            <svg class="bi me-1" width="18px" height="18px">
+              <use xlink:href="#delete" />
+            </svg>
+          </a>
+
+
+        </div>
+
+
+      </div>
+
+
+    </div>
+    {% endfor %}
+
+    
+
+
   </div>
+</div>
+
+
+
+
+
+</div>
+
+
+
+<div class="b-example-divider" style="width:80px"></div>
+
+
+
+<!-- barra opciones -->
+
+<div class="d-flex flex-column   bg-light" style="width: 180px;">
+
+  <div class="d-flex flex-column  h-100 ">
+
+
+    <button title="Nuevo Usuario" id="actModal" data-bs-toggle="modal" data-bs-target="#exampleModal"
+      class="fw-bold d-flex mt-3   btn-circle  mx-auto " style="width: 70px ; height: 70px;">
+
+      <div class="d-flex  justify-content-center flex-column w-100  h-100">
+        <div>+</div>
+      </div>
+
+    </button>
+
+
+
+  </div>
+
+
+</div>
+
+
+
+
+
+
+
+
+<!-- librerias pais-stato-ciudad -->
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+<script src="//geodata.solutions/includes/countrystatecity.js"></script>
+
+<!-- modal crear usuario formulario -->
+<div class="modal bd-example-modal-lg " id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg"  >
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+
+      <div class="modal-body">
+
+      <div class="row">
+          <div class="colsm-12">
+            <div class="card border ">
+              <div class="card-header bg-dark">
+                <h4 class="text-center text-light ">Registrar nuevo Usuario</h4>
+              </div>
+              <!-- datos para el formulario -->
+              <div class="card-body d-flex align-content-around justify-content-around">
+                <!-- <form method="POST" class="row">
+                  
+                  {% csrf_token %}
+                  {% for field in form %}
+
+
+                  <div class="form-group-sm fw-bold fs-6">
+                    <labe class="control-label ">{{ field.label_tag }}</labe>
+                    {{ field|add_class:"form-control " }}
+                    <span class="text-danger">{{ field.errors }}</span>
+                  </div>
+
+
+                  {% endfor %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                  <input type="submit" class="btn btn-primary" value="Crear">
+                </form>  -->
+
+
+                  <!-- <div>
+                    {% for field in form %}
+                      <div>
+                        <label>{{ field.label_tag }}</label>
+                        <input type="{{ field.field.widget.input_type }}" class="form-control" name="{{ field.name }}" id="{{ field.id_for_label }}">
+                        <div class="text-danger">{{ field.errors }}</div>
+                      </div>
+                    {% endfor %}
+                  </div> -->
+                  <!-- <div>{{ field|add_class:"form-control" }}</div> -->
+
+
+
+
+
+                <form id="usuario_form" method="POST" class="row">
+                  {% csrf_token %}
+
+                  <div class="col-6">
+
+
+                    <div class="form-group campform {% if form.Nombre.errors %}has-error{% endif %}" >
+                      <labe class="control-label">{{form.Nombre.label_tag }}</labe>
+                      {{ form.Nombre|add_class:"form-control " }}
+                      <!-- <input type="text" id="Nombre" value="{{ form.Nombre.value }}" name="Nombre" class="form-control" placeholder="Pepito Daniel"> -->
+                      <span class="myerror">{{ form.Nombre.errors }}</span>
+                    </div>
+
+
+                    <div class="form-group campform  {% if form.Apellido_P.errors %}has-error{% endif %}">
+                      <labe class="control-label">{{form.Apellido_P.label_tag }}</labe>
+                      {{ form.Apellido_P|add_class:"form-control" }}
+                      <span class="myerror">{{ form.Apellido_P.errors }}</span>
+                    </div>
+
+
+                    <div class="form-group campform {% if form.Apellido_M.errors %}has-error{% endif %}">
+                      <labe class="control-label">{{form.Apellido_M.label_tag }}</labe>
+                      {{ form.Apellido_M|add_class:"form-control " }}
+                      <span class="myerror">{{ form.Apellido_M.errors }}</span>
+                    </div>
+
+
+                    <div class="form-group campform {% if form.Fecha_Nac.errors %}has-error{% endif %}">
+                      <labe class="control-label">{{form.Fecha_Nac.label_tag }}</labe>
+                      <input type="date" id="Fecha_Nac" value="{{ form.Fecha_Nac.value }}" name="Fecha_Nac" class="form-control" placeholder="dd/mm/aa">
+
+                      <!-- {{ form.Fecha_Nac|add_class:"form-control " }} -->
+                      <span class="myerror">{{ form.Fecha_Nac.errors }}</span>
+
+                    </div>
+
+
+                    <div class="form-group campform {% if form.Telf_Celular.errors %}has-error{% endif %}">
+                      <labe class="control-label">{{form.Telf_Celular.label_tag }}</labe>
+                      {{ form.Telf_Celular|add_class:"form-control " }}
+                      <span class="myerror">{{ form.Telf_Celular.errors }}</span>
+
+
+
+                    </div>
+
+                    <div class="form-group campform {% if form.Usu_Django.errors %}has-error{% endif %}">
+
+                      <labe class="control-label">{{form.Usu_Django.label_tag }}</labe>
+                      {{ form.Usu_Django|add_class:"form-control " }}
+                      <span class="myerror">{{ form.Usu_Django.errors }}</span>
+
+                    </div>
+
+
+
+
+
+                  </div>
+
+
+
+
+                  <div class="col-6">
+
+
+                    <div class="form-group campform {% if form.Pais.errors %}has-error{% endif %}">
+                      <labe class="control-label">{{form.Pais.label_tag }}</labe>
+                      {{ form.Pais|add_class:"form-control drop" }}
+                      <span class="myerror">{{ form.Pais.errors }}</span>
+                    </div>
+
+                    <div class="form-group campform {% if form.Provincia.errors %} has-error {% endif %}">
+                      <labe class="control-label">{{form.Provincia.label_tag }}</labe>
+                      <!-- {{ form.field.Provincia}} solo con el label -->
+                      <!-- <select name="Provincia" label="Provincia" id="id_Provincia" class="form-control drop">
+                        <option value="" selected disabled>Seleciona la provincia</option>
+                      </select> -->
+
+
+                      {{ form.Provincia|add_class:"form-control drop" }}
+                      <span class="myerror">{{ form.Provincia.errors }}</span>
+                    </div>
+
+
+                    <div class="form-group campform {% if form.Ciudad.errors %}has-error{% endif %}">
+                      <labe class="control-label">{{form.Ciudad.label_tag }}</labe>
+                      <!-- {{ form.field.Ciudad}} -->
+                      <!-- <select name="Ciudad" label="Ciudad" id="id_Ciudad" class="form-control drop">
+                        <option value="" selected disabled>Seleciona la provincia</option>
+                      </select> -->
+
+                      {{ form.Ciudad|add_class:"form-control drop" }}
+                      <span class="myerror">{{ form.Ciudad.errors }}</span>
+                    </div>
+
+
+
+
+                    <div class="form-group campform {% if form.T_Identificacion.errors %}has-error{% endif %}">
+                      <labe class="control-label">{{form.T_Identificacion.label_tag }}</labe>
+                      {{ form.T_Identificacion|add_class:"form-control drop" }}
+                      <span class="myerror">{{ form.T_Identificacion.errors }}</span>
+                    </div>
+
+
+                    <div class="form-group campform {% if form.N_Identificacion.errors %}has-error{% endif %}" >
+                      <labe class="control-label">{{form.N_Identificacion.label_tag }}</labe>
+                      {{ form.N_Identificacion|add_class:"form-control " }}
+                      <span class="myerror">{{ form.N_Identificacion.errors }}</span>
+                    </div>
+
+
+                  </div>
+
+
+                <input type="submit" class="mx-auto btn btn-dark mt-2 w-50 fw-bold" value="Enviar">
+
+                </form>
+              </div>
+          </div>
+        </div>
+      </div>
+
+
+
+      </div>
+
+    </div>
+  </div>
+</div>
   
+
+
+
   
-  <!-- Modal -->
-  <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-          Esta a punto de Eliminar este Usuario,
-          Desea continuar?
-        </div>
-        <div id="confirm" class="modal-footer">
-        </div>
+<!-- modal eliminar -->
+<div class="modal " id="exampleModal1" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog"  >
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body text-center">
+        Esta a punto de Eliminar este Usuario,
+        Desea continuar?
+      </div>
+      <div id="confirm" class="modal-footer">
       </div>
     </div>
   </div>
-  
-  
-  
 </div>
 
+
+
+<!-- modal asignar-->
+<!-- <div class="modal " id="exampleModalAsiganacion" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog"  >
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+
+
+      <div class="row text-center p-2">
+        <a class="col  m-2 btn text-hover" data-bs-toggle="modal" data-target="#formularioEstudiante">
+          <img src="https://cdn-icons-png.flaticon.com/512/2784/2784403.png" class="me-2 "  height="80px" width="80px" alt="">
+          <p class="mx-auto fw-bold">Estudiante</p>
+        </a>
+
+     
+        
+        <div class="col fw-semibold">
+            Asignar nuevo 
+        </div>
+
+
+
+        <a class="col m-2 p-2 btn text-hover"  data-bs-toggle="modal"  data-target="#formularioProfesor">
+          <img src="https://cdn-icons-png.flaticon.com/512/3429/3429433.png"  class="me-2"  height="80px" width="80px" alt="">
+          <p class="mx-auto fw-bold">Profesor</p>
+        </a>
+      </div> -->
+
+
+
+
+
+    <!-- formularios para asignar estudiante y profesor -->
+    <!-- <form action="http://127.0.0.1:8000/asignarEstudiante/"  method="POST" >
+      {% csrf_token %}
+    
+    
+      <select  class="invisible" name="usua" id="id_usua">
+        <option value="" id="selectUsuHidden" selected>usuario selecionado</option>
+      </select>
+      
+
+      <div class="row {% if formEstudiante.Nom_carr.errors %}has-error{% endif %}" >
+          <labe class="control-label">{{formEstudiante.Nom_carr.label_tag }}</labe>
+          {{ formEstudiante.Nom_carr|add_class:"form-control w-50" }}
+          <span class="myerror">{{ formEstudiante.Nom_carr.errors }}</span>
+      </div>
+
+
+      <div class="row {% if formEstudiante.Fecha_Inici.errors %}has-error{% endif %}" >
+        <labe class="control-label">{{formEstudiante.Fecha_Inici.label_tag }}</labe>
+        {{ formEstudiante.Fecha_Inici|add_class:"form-control w-50" }}
+        <span class="myerror">{{ formEstudiante.Fecha_Inici.errors }}</span>
+      </div>
+
+      <input type="submit" class="mx-auto btn btn-dark mt-2 w-50 fw-bold" value="Enviar">
+    
+    </form>
+
+    
+
+    </div>
+  </div>
+</div> -->
+
+
+
+<div class="modal " id="exampleModalAsiganacion" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog"  >
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+
+
+      <div class="row text-center p-2">
+       
+
+       
+
+        <a class="col m-2 btn text-hover" data-bs-toggle="modal" data-target="#formularioEstudiante">
+          <img src="https://cdn-icons-png.flaticon.com/512/2784/2784403.png" class="me-2 "  height="80px" width="80px" alt="">
+          <p class="mx-auto fw-bold">Estudiante</p>
+        </a>
+
+     
+        
+        <div class="col fw-semibold">
+            Asignar nuevo 
+        </div>
+
+
+
+        <a class="m-2 col p-2 btn text-hover"  data-bs-toggle="modal"  data-target="#formularioProfesor">
+          <img src="https://cdn-icons-png.flaticon.com/512/3429/3429433.png"  class="me-2"  height="80px" width="80px" alt="">
+          <p class="mx-auto fw-bold">Profesor</p>
+        </a>
+      </div>
+
+
+      <!-- formulario estudiante     -->
+      <form action="http://127.0.0.1:8000/asignarEstudiante/"  class="" method="POST" >
+
+        {% csrf_token %}
+        <select  class="invisible col" name="usua" id="id_usua">
+          <option value="" id="selectUsuHidden" selected>usuario selecionado</option>
+        </select>
+        <div class="row">
+
+          <div class="col-12 mb-2">
+            <div class="row  {% if formEstudiante.Nom_carr.errors %}has-error{% endif %}" >
+              <labe class="control-label col-4 text-center ">{{formEstudiante.Nom_carr.label_tag }}</labe>
+              {{ formEstudiante.Nom_carr|add_class:"form-control w-50 col-4" }}
+              <span class="myerror">{{ formEstudiante.Nom_carr.errors }}</span>
+            </div>
+          </div>
+
+          <div class="col-12 mb-2">
+            <div class="row {% if formEstudiante.Fecha_Inici.errors %}has-error{% endif %}" >
+              <labe class="col-4 control-label text-center">{{formEstudiante.Fecha_Inici.label_tag }}</labe>
+              <input type="date" id="Fecha_Nac" value="{{ formEstudiante.Fecha_Inici.value }}" name="Fecha_Inici" class="form-control col-4 w-50" placeholder="dd/mm/aa">
+              <span class="myerror">{{ formEstudiante.Fecha_Inici.errors }}</span>
+            </div>  
+          </div>
+
+
+        </div>
+      
+
+        <div class="col-12 text-center mt-2 mb-2">
+          <input type="submit" class="btn btn-dark w-50 fw-bold" value="Enviar">
+        </div>
+        
+
+      
+      </form>
+
+
+
+
+    
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+<!-- 
+<form action="http://127.0.0.1:8000/asignarEstudiante/">
+  {% csrf_token %}
+
+
+  <select  class="invisible" name="usua" id="id_usua">
+    <option value="0705117935" selected>usuario selecionado</option>
+  </select>
+  
+  {{formProfesor.Fecha_Inici}} 
+  {{formProfesor.Estado}}
+  <input type="submit" class="mx-auto btn btn-dark mt-2 w-50 fw-bold" value="Enviar">
+
+</form> -->
+
+<script type="text/javascript">
+
+  var d = document
+  var select = document.getElementById('id_Pais');
+  var provincia = document.getElementById('id_Provincia')
+  var ciudad = document.getElementById('id_Ciudad')
+
+  // funciones
+  function CompleteDropdown(data,selectAllenar,campoName,nombreLabel){
+    selectAllenar.innerHTML = `<option value="" selected disabled>${nombreLabel}</option>`
+    data.forEach(function(e){
+
+      selectAllenar.innerHTML +=  `<option value="${e[campoName]}">${e[campoName]}</option>`
+    })
+  }
+  function ListenSelect(Objeto,ruta,selectAllenar,campoName,nombreLabel){
+    Objeto.addEventListener('change',
+    function(){
+      var selectedOption = this.options[Objeto.selectedIndex];
+      fetch(ruta + `${selectedOption.value}/`)
+      .then((response) => response.json())
+      .then((data) => CompleteDropdown(data,selectAllenar,campoName,nombreLabel));
+      // console.log(selectedOption.value + ': ' + selectedOption.text);
+
+    });
+  }
+
+  ListenSelect(select,'http://127.0.0.1:8000/provincia/',provincia,'Nomprov','Seleccione la Provincia')
+  ListenSelect(provincia,'http://127.0.0.1:8000/ciudad/',ciudad,'Nomcant','Seleccione la Ciudad')
+
+    // Eliminamos la propiedad required de todos los campos de entrada
+  d.querySelectorAll('input').forEach(function(input) {
+  input.removeAttribute('required');
+  });
+  d.querySelectorAll('select').forEach(function(input) {
+    input.removeAttribute('required');
+  });
+  // d.getElementById('id_Pais').addEventListener('change',(e)=>{
+  //   console.log(e)
+  // })
+
+  function del(e) {
+    document.getElementById('confirm').innerHTML = `<a  class="btn btn-danger" href='${e.href}'>Eliminar</a >`
+  }
+  
+  function btnAsignarEst(e){
+    $inputNident = document.getElementById('selectUsuHidden')
+    $inputNident  = e.getAttribute('data-user')
+  }
+//con el codgio del selst dinamico descargado
+  // document.querySelectorAll('input').forEach(function(input){
+  //   input.addEventListener('change', function (this){
+  //     this.classList.remove("mystyle")
+  //   })
+  // })
+
+  // document.addEventListener("DOMContentLoaded", () => {
+  //   $pais = document.getElementById("Pais")
+  //   $estado = document.getElementById("Provincia")
+  //   $ciudad = document.getElementById("Ciudad")
+  //   $selectPais = document.getElementById("countryId")
+  //   $selectEstado = document.getElementById("stateId")
+  //   $selectCiudad = document.getElementById("cityId")
+
+  //   setTimeout(() => {
+
+  //     $pais.innerHTML = "seleciona el pais"
+
+  //   }, 500)
+
+  //   $selectPais.addEventListener("change", () => {
+  //     $ciudad.innerHTML = 'Elige una ciudad'
+  //     $selectEstado.classList.add('progress-select')
+  //     setTimeout(() => { $estado.innerHTML = 'Elige una provincia' }, 1000)
+  //     setTimeout(() => { $selectEstado.classList.remove('progress-select') }, 1500)
+
+
+  //   })
+
+  //   $selectEstado.addEventListener("change", () => {
+  //     $ciudad.innerHTML = 'Elige una ciudad'
+  //     $selectCiudad.classList.remove('progress-select')
+  //     $selectCiudad.classList.add('progress-select')
+  //     setTimeout(() => {
+  //       $ciudad.innerHTML = 'Elige una ciudad'
+  //       $selectCiudad.classList.remove('progress-select')
+  //     }, 1000)
+  //   })
+
+
+
+
+
+  // })
+
+
+</script>
+
+
+
+
+{% if error %}
+<script type="text/javascript">
+  document.getElementById("actModal").click()
+  
+  const inputs = document.querySelectorAll("input");
+  const selects = document.querySelectorAll("select");
+  selects.forEach(select => {
+    select.addEventListener("change", function() {
+      // Elimina la clase que agrega el borde rojo
+      this.parentElement.classList.remove("has-error");
+      this.nextElementSibling.style.display= "none";
+    });
+  });
+  // Agrega un evento de "cambio" a cada uno de los campos de entrada
+  inputs.forEach(input => {
+    input.addEventListener("change", function() {
+      // Elimina la clase que agrega el borde rojo
+      this.parentElement.classList.remove("has-error");
+      this.nextElementSibling.style.display= "none";
+    });
+  });
+</script>  
+{% endif %}
+
+{% if success %}
+  <div id="alertSuccess" class="alertSuccess  w-25 rounded text-center alert alert-success alert-dismissible fade show" role="alert">
+    {{ success }}
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+  </div>
+  <script type="text/javascript">
+    $alert = document.getElementById("alertSuccess")
+    setTimeout( ()=>{
+      $alert.parentNode.removeChild($alert)
+    }, 3000) 
+  </script>  
+{% endif %}
+
+
+
 {% endblock %}
+

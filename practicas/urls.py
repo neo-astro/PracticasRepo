@@ -9,6 +9,7 @@ urlpatterns = [
     path('tasks/', views.tasks, name='tasks'),
     path('estudiante/', views.Estudiante),
     path('usuario/', views.usuario,name='usuario'),
+    path('usuario/update/<str:N_Identificacion>/', views.updateUsuario,name='usuarioupdate'),
     path('usuario/eliminar/<str:N_Identificacion>/', views.deleteUser),
     path('provincia/<str:nombre_pais>/', views.ApiProvincia),
     path('ciudad/<str:nombre_provincia>/', views.ApiCiudad),

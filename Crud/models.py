@@ -72,6 +72,14 @@ class profesores(models.Model):
     Fecha_Inic = models.DateField(blank=True, error_messages={'invalid': 'Ingrese una fecha válida.'})
     Estado = models.BooleanField(default=False)
 
+class profesoresForm(forms.ModelForm):
+    usup = forms.IntegerField( label='usua') 
+    Fecha_Inic = models.DateField(blank=True, error_messages={'invalid': 'Ingrese una fecha válida.'})
+    Estado = models.BooleanField(default=False)
+    class Meta:
+        model =profesores
+        fields = ['usup','Fecha_Inic','Estado']
+
 
 class alumnos(models.Model):
     usua = models.ForeignKey(usuarios,  on_delete=models.SET_NULL, null=True,blank=True,error_messages={'required': 'Selecione al estudiante'})
@@ -85,8 +93,8 @@ class alumnosForm(forms.ModelForm):
     usua       =  forms.IntegerField( label='usua')
     # usua         = forms.ModelChoiceField(queryset=usuarios.objects.all(),   label='usua')
     # usua = forms.ChoiceField(choices=[(item.pk, item.usua) for item in alumnos.objects.all()])
-    Nom_carr     =  forms.ModelChoiceField(queryset=carrera.objects.all(),      required=True ,empty_label="Seleccione una Carrera",  error_messages={'required': 'Selecciona el tipo de carrera que pertenece.','required': 'Este campo es requerido'}   ,       )
-    Fecha_Inici  = forms.DateField(                                             label='Fecha de inicio',required=True ,error_messages={'invalid': 'Ingrese una fecha válida.','required':'El campo es requerido'})
+    Nom_carr     =  forms.ModelChoiceField(queryset=carrera.objects.all(),      required=True ,empty_label="Seleccione una Carrera", label='Carrera', error_messages={'required': 'Selecciona el tipo de carrera que pertenece.','required': 'Este campo es requerido'}   ,       )
+    Fecha_Inici  = forms.DateField(                                             required=True , label="Fecha de inicio",error_messages={'invalid': 'Ingrese una fecha válida.','required':'El campo es requerido'})
      
     class Meta:
         model = alumnos
@@ -109,18 +117,24 @@ class usuariosForm(forms.ModelForm):
   class Meta:
     model = usuarios
     fields = ['Nombre', 'Apellido_P', 'Apellido_M', 'Fecha_Nac', 'Telf_Celular', 'Usu_Django', 'N_Identificacion', 'T_Identificacion', 'Pais', 'Provincia', 'Ciudad']
-  
-  def clean(self):
-        cleaned_data = super().clean()
-        tpi = cleaned_data.get("T_Identificacion")
-        numero_tpi = cleaned_data.get("N_Identificacion")
-        if tpi and numero_tpi:
-            if tpi.id == 1 and len(numero_tpi) != 13:
-                self.add_error("N_Identificacion", "Si el tipo de identificación es 1, el número debe tener 13 dígitos.")
-            elif tpi.id != 1 and len(numero_tpi) != 10:
-                self.add_error("N_Identificacion", "Si el tipo de identificación es distinto de 1, el número debe tener 10 dígitos.")
-    
+    widgets = {
+        'Fecha_Nac': forms.TextInput(attrs={'type': 'date'}),
+    }
 
+  def clean(self):
+    cleaned_data = super().clean()
+    tpi = cleaned_data.get("T_Identificacion")
+    numero_tpi = cleaned_data.get("N_Identificacion")
+    if tpi and numero_tpi:
+        if tpi.id == 1 and len(numero_tpi) != 13:
+            self.add_error("N_Identificacion", "Si el tipo de identificación es 1, el número debe tener 13 dígitos.")
+        elif tpi.id != 1 and len(numero_tpi) != 10:
+            self.add_error("N_Identificacion", "Si el tipo de identificación es distinto de 1, el número debe tener 10 dígitos.")
+    
+    # def __init__(self, *args, **kwargs):
+    #     super(usuarios, self).__init__(*args, **kwargs)
+    #     self.fields['Pais'].choices[0] = ('', 'Select an option', {'disabled': True})  
+  
 
     # def clean(self):
     #     cleaned_data = super().clean()

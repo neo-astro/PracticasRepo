@@ -1,0 +1,239 @@
+{% extends "index.html" %}
+
+
+{% block contend %}
+
+{% load widget_tweaks %}
+<link rel="stylesheet" href="../static/css/styles.css">
+
+
+
+
+
+
+
+
+
+<!-- contenido estudiante  -->
+<div class="d-flex flex-column align-items-stretch  bg-light" style="width: 700px;">
+
+  <div class="container-fluid mx-auto text-center bg-dark text-decoration-none text-light mb-1">
+    <svg class="bi mt-1 me-2" width="40" height="40">
+      <use xlink:href="#userPerfil" />
+    </svg>
+    <p class="fs-5 mb-2 fw-semibold">Lista de Usuarios</p>
+  </div>
+
+
+
+  <div class="list-group list-group-flush border-bottom  scrollarea">
+
+    {{form}}
+    
+
+
+  </div>
+</div>
+
+
+
+
+
+</div>
+
+
+
+<div class="b-example-divider" style="width:80px"></div>
+
+
+
+<!-- barra opciones -->
+
+<div class="d-flex flex-column   bg-light" style="width: 180px;">
+
+  <div class="d-flex flex-column  h-100 ">
+
+
+    <button title="Nuevo Usuario" id="actModal" data-bs-toggle="modal" data-bs-target="#exampleModal"
+      class="fw-bold d-flex mt-3   btn-circle  mx-auto " style="width: 70px ; height: 70px;">
+
+      <div class="d-flex  justify-content-center flex-column w-100  h-100">
+        <div>+</div>
+      </div>
+
+    </button>
+
+
+
+  </div>
+
+
+</div>
+
+
+
+
+
+
+
+
+<!-- librerias pais-stato-ciudad -->
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+<script src="//geodata.solutions/includes/countrystatecity.js"></script>
+
+<!-- modal crear usuario formulario -->
+<div class="modal bd-example-modal-lg " id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg"  >
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+
+      <div class="modal-body">
+
+
+
+      </div>
+
+    </div>
+  </div>
+</div>
+  
+
+
+
+  
+<!-- modal eliminar -->
+<div class="modal " id="exampleModal1" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog"  >
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body text-center">
+        Esta a punto de Eliminar este Usuario,
+        Desea continuar?
+      </div>
+      <div id="confirm" class="modal-footer">
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+<div class="modal " id="exampleModalAsiganacion" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog"  >
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+
+
+      <div class="row text-center p-2">
+       
+
+       
+
+        <a class="col m-2 btn text-hover" id="verFormEstudiante" onclick="visualizarFormEstudiante()" >
+          <img src="https://cdn-icons-png.flaticon.com/512/2784/2784403.png" class="me-2 "  height="80px" width="80px" alt="">
+          <p class="mx-auto fw-bold">Estudiante</p>
+        </a>
+
+     
+        
+        <div class="col fw-semibold">
+            Asignar nuevo 
+        </div>
+
+
+
+        <a class="m-2 col p-2 btn text-hover" id="verFormProfesor" onclick="visualizarFormProfesor()" >
+          <img src="https://cdn-icons-png.flaticon.com/512/3429/3429433.png"  class="me-2"  height="80px" width="80px" alt="">
+          <p class="mx-auto fw-bold">Profesor</p>
+        </a>
+      </div>
+
+
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+<script type="text/javascript">
+
+  var d = document
+  var select = document.getElementById('id_Pais');
+  var provincia = document.getElementById('id_Provincia')
+  var ciudad = document.getElementById('id_Ciudad')
+
+
+    // Eliminamos la propiedad required de todos los campos de entrada
+  d.querySelectorAll('input').forEach(function(input) {
+  input.removeAttribute('required');
+  });
+  d.querySelectorAll('select').forEach(function(input) {
+    input.removeAttribute('required');
+  });
+  // d.getElementById('id_Pais').addEventListener('change',(e)=>{
+  //   console.log(e)
+  // })
+
+  function del(e) {
+    document.getElementById('confirm').innerHTML = `<a  class="btn btn-danger" href='${e.href}'>Eliminar</a >`
+  }
+  
+
+</script>
+
+
+
+
+{% if error %}
+<script type="text/javascript">
+  document.getElementById("actModal").click()
+  
+  const inputs = document.querySelectorAll("input");
+  const selects = document.querySelectorAll("select");
+  selects.forEach(select => {
+    select.addEventListener("change", function() {
+      // Elimina la clase que agrega el borde rojo
+      this.parentElement.classList.remove("has-error");
+      this.nextElementSibling.style.display= "none";
+    });
+  });
+  // Agrega un evento de "cambio" a cada uno de los campos de entrada
+  inputs.forEach(input => {
+    input.addEventListener("change", function() {
+      // Elimina la clase que agrega el borde rojo
+      this.parentElement.classList.remove("has-error");
+      this.nextElementSibling.style.display= "none";
+    });
+  });
+</script>  
+{% endif %}
+
+{% if success %}
+  <div id="alertSuccess" class="alertSuccess  w-25 rounded text-center alert alert-success alert-dismissible fade show" role="alert">
+    {{ success }}
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+  </div>
+  <script type="text/javascript">
+    $alert = document.getElementById("alertSuccess")
+    setTimeout( ()=>{
+      $alert.parentNode.removeChild($alert)
+    }, 3000) 
+  </script>  
+{% endif %}
+
+
+
+{% endblock %}
+
