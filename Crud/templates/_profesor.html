@@ -508,7 +508,7 @@
         </div>
       
 
-        <div class="col-12 text-center mt-2 mb-2">
+        <div class="col-12 text-center ">
           <input type="submit" class="btn btn-dark w-50 fw-bold" value="Enviar">
         </div>
         
@@ -582,9 +582,7 @@
   d.querySelectorAll('select').forEach(function(input) {
     input.removeAttribute('required');
   });
-  // d.getElementById('id_Pais').addEventListener('change',(e)=>{
-  //   console.log(e)
-  // })
+
 
   function del(e) {
     document.getElementById('confirm').innerHTML = `<a  class="btn btn-danger" href='${e.href}'>Eliminar</a >`
@@ -594,51 +592,7 @@
     $inputNident = document.getElementById('selectUsuHidden')
     $inputNident  = e.getAttribute('data-user')
   }
-//con el codgio del selst dinamico descargado
-  // document.querySelectorAll('input').forEach(function(input){
-  //   input.addEventListener('change', function (this){
-  //     this.classList.remove("mystyle")
-  //   })
-  // })
 
-  // document.addEventListener("DOMContentLoaded", () => {
-  //   $pais = document.getElementById("Pais")
-  //   $estado = document.getElementById("Provincia")
-  //   $ciudad = document.getElementById("Ciudad")
-  //   $selectPais = document.getElementById("countryId")
-  //   $selectEstado = document.getElementById("stateId")
-  //   $selectCiudad = document.getElementById("cityId")
-
-  //   setTimeout(() => {
-
-  //     $pais.innerHTML = "seleciona el pais"
-
-  //   }, 500)
-
-  //   $selectPais.addEventListener("change", () => {
-  //     $ciudad.innerHTML = 'Elige una ciudad'
-  //     $selectEstado.classList.add('progress-select')
-  //     setTimeout(() => { $estado.innerHTML = 'Elige una provincia' }, 1000)
-  //     setTimeout(() => { $selectEstado.classList.remove('progress-select') }, 1500)
-
-
-  //   })
-
-  //   $selectEstado.addEventListener("change", () => {
-  //     $ciudad.innerHTML = 'Elige una ciudad'
-  //     $selectCiudad.classList.remove('progress-select')
-  //     $selectCiudad.classList.add('progress-select')
-  //     setTimeout(() => {
-  //       $ciudad.innerHTML = 'Elige una ciudad'
-  //       $selectCiudad.classList.remove('progress-select')
-  //     }, 1000)
-  //   })
-
-
-
-
-
-  // })
 
 
 </script>

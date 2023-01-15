@@ -55,7 +55,7 @@ class usuarios(models.Model):
     Fecha_Nac        = models.DateField(null=False)
     Telf_Celular     = models.CharField(max_length=15,null=False)
     Usu_Django       = models.CharField(max_length=50,null=False)
-    N_Identificacion = models.CharField(max_length=13, primary_key=True, null=False, unique=True)
+    N_Identificacion = models.CharField(max_length=13, primary_key=True, null=False)
     T_Identificacion = models.ForeignKey(tpi,   on_delete=models.CASCADE, null=False ) 
     Pais             = models.ForeignKey(pais,  on_delete=models.CASCADE, null=False )
     Provincia        = models.ForeignKey(provincia,  on_delete=models.CASCADE, null=False )
@@ -105,10 +105,11 @@ class usuariosForm(forms.ModelForm):
   Nombre           = forms.CharField(max_length=50,                           label='Nombre',required=True ,validators=[RegexValidator(r'^[a-zA-Z]*$','Solo se permiten letras en este campo.'),MinLengthValidator(3,'Minimo 3 letras')],  error_messages={'required': 'Este campo es requerido'})
   Apellido_P       = forms.CharField(max_length=50,                           label='Apellido Paterno',required=True ,validators=[RegexValidator(r'^[a-zA-Z]*$','Solo se permiten letras en este campo.'),MinLengthValidator(3,'Minimo 3 letras')],  error_messages={'required': 'Este campo es requerido'})
   Apellido_M       = forms.CharField(max_length=50,                           label='Apellido Materno',required=True ,validators=[RegexValidator(r'^[a-zA-Z]*$','Solo se permiten letras en este campo.'),MinLengthValidator(3,'Minimo 3 letras')],  error_messages={'required': 'Este campo es requerido'})
-  Fecha_Nac        = forms.DateField(                                         label='Fecha de nacimiento',required=True ,error_messages={'invalid': 'Ingrese una fecha válida.','required':'El campo es requerido'})
+  Fecha_Nac        = forms.DateField(widget=forms.TextInput(attrs={'type': 'date'}),                                         label='Fecha de nacimiento',required=True ,error_messages={'invalid': 'Ingrese una fecha válida.','required':'El campo es requerido'})
   Telf_Celular     = forms.CharField(max_length=15,                           label='Telefono Celular',required=True ,validators=[RegexValidator(r'^0\d{9}$','Comprube el numero por favor'),], error_messages={'required': 'Este campo es requerido'})
   Usu_Django       = forms.CharField(max_length=50,                           label='Nombre de Usuario',required=True ,validators=[RegexValidator(r'^[a-zA-Z0-9]*$','No debe tener espacios'),], error_messages={'required': 'Este campo es requerido'})
-  N_Identificacion = forms.CharField(max_length=13,                           label='Numero de Identificacion',required=True ,error_messages={'invalid': 'Compruebe su identificacion.','required': 'Este campo es requerido'},validators=[RegexValidator(r'^\d{10,13}$','Comprube el numero por favor')] )
+  N_Identificacion = forms.CharField(max_length=13,                           label='Numero de Identificacion',required=True ,error_messages={'invalid': 'Compruebe su identificacion.','required': 'Este campo es requerido'},validators=[RegexValidator(r'^0[\d]{9,12}$','Comprube el numero por favor')] )
+#   N_Identificacion = forms.CharField(max_length=13,                           label='Numero de Identificacion',error_messages={'invalid': 'Compruebe su identificacion.'},validators=[RegexValidator(r'^0[\d]{9,12}$','Comprube el numero por favor')] )
   T_Identificacion = forms.ModelChoiceField(queryset=tpi.objects.all(),       label='Tipo de Identificacion',required=True ,error_messages={'required': 'Selecciona el tipo de identificaion.',},empty_label="Tipo de identificacion" ) 
   Pais             = forms.ModelChoiceField(queryset=pais.objects.all(),      required=True ,empty_label="Seleccione el País",  error_messages={'required': 'Selecciona el tipo de identificaion.','required': 'Este campo es requerido'}   ,       )    
   Provincia        = forms.ModelChoiceField(queryset=provincia.objects.none(), required=True ,empty_label="Seleccione la Provincia",error_messages={'required': 'Compruebe su identificaion.','required': 'Este campo es requerido'},       )
@@ -117,24 +118,47 @@ class usuariosForm(forms.ModelForm):
   class Meta:
     model = usuarios
     fields = ['Nombre', 'Apellido_P', 'Apellido_M', 'Fecha_Nac', 'Telf_Celular', 'Usu_Django', 'N_Identificacion', 'T_Identificacion', 'Pais', 'Provincia', 'Ciudad']
-    widgets = {
-        'Fecha_Nac': forms.TextInput(attrs={'type': 'date'}),
-    }
+
 
   def clean(self):
     cleaned_data = super().clean()
     tpi = cleaned_data.get("T_Identificacion")
     numero_tpi = cleaned_data.get("N_Identificacion")
+    
+    if usuarios.objects.filter(N_Identificacion=numero_tpi).exists():
+        self.add_error('N_Identificacion', 'El numero de identificacion ya ha sido registrado.')
+
+    
     if tpi and numero_tpi:
         if tpi.id == 1 and len(numero_tpi) != 13:
-            self.add_error("N_Identificacion", "Si el tipo de identificación es 1, el número debe tener 13 dígitos.")
+            self.add_error("N_Identificacion", "Su Ruc debe tener 13 dígitos.")
         elif tpi.id != 1 and len(numero_tpi) != 10:
-            self.add_error("N_Identificacion", "Si el tipo de identificación es distinto de 1, el número debe tener 10 dígitos.")
-    
+            self.add_error("N_Identificacion", "Su identificacion debe tener 10 dígitos.")
+
+    # if self.instance:
+    #  self.fields.pop('N_Identificacion')
+
+
+    # pk = cleaned_data.get("pk")
+    # if pk is None and not self.instance.pk:
+    #     raise forms.ValidationError("El campo pk es obligatorio.")
+
+
+    # if self.instance:
+    #     if usuarios.objects.filter(N_Identificacion=numero_tpi).exclude(N_Identificacion=self.instance.pk).exists():
+    #         raise forms.ValidationError("Ya existe un registro con este código")
+    #     else:
+    #         if usuarios.objects.filter(N_Identificacion=numero_tpi).exists():
+    #             raise forms.ValidationError("Ya existe un registro con este código")
+    #     return numero_tpi
+
+
     # def __init__(self, *args, **kwargs):
     #     super(usuarios, self).__init__(*args, **kwargs)
     #     self.fields['Pais'].choices[0] = ('', 'Select an option', {'disabled': True})  
   
+
+
 
     # def clean(self):
     #     cleaned_data = super().clean()

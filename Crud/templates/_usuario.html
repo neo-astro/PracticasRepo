@@ -253,7 +253,6 @@
                     <div class="form-group campform {% if form.Fecha_Nac.errors %}has-error{% endif %}">
                       <labe class="control-label">{{form.Fecha_Nac.label_tag }}</labe>
                       <input type="date" id="Fecha_Nac" value="{{ form.Fecha_Nac.value }}" name="Fecha_Nac" class="form-control" placeholder="dd/mm/aa">
-
                       <!-- {{ form.Fecha_Nac|add_class:"form-control " }} -->
                       <span class="myerror">{{ form.Fecha_Nac.errors }}</span>
 
@@ -315,7 +314,7 @@
                         <option value="" selected disabled>Seleciona la provincia</option>
                       </select> -->
 
-                      {{ form.Ciudad|add_class:"form-control drop" }}
+                      {{ form.Ciudad|add_class:"form-control drop w-225" }}
                       <span class="myerror">{{ form.Ciudad.errors }}</span>
                     </div>
 
@@ -324,22 +323,23 @@
 
                     <div class="form-group campform {% if form.T_Identificacion.errors %}has-error{% endif %}">
                       <labe class="control-label">{{form.T_Identificacion.label_tag }}</labe>
-                      {{ form.T_Identificacion|add_class:"form-control drop" }}
+                      {{ form.T_Identificacion|add_class:"form-control drop w-225" }}
                       <span class="myerror">{{ form.T_Identificacion.errors }}</span>
                     </div>
 
 
                     <div class="form-group campform {% if form.N_Identificacion.errors %}has-error{% endif %}" >
                       <labe class="control-label">{{form.N_Identificacion.label_tag }}</labe>
-                      {{ form.N_Identificacion|add_class:"form-control " }}
+                      {{ form.N_Identificacion|add_class:"form-control drop" }}
                       <span class="myerror">{{ form.N_Identificacion.errors }}</span>
                     </div>
 
 
                   </div>
 
-
-                <input type="submit" class="mx-auto btn btn-dark mt-2 w-50 fw-bold" value="Enviar">
+                  <div class="col-12 text-center">
+                    <input type="submit" class=" btn btn-dark mt-2 w-50 fw-bold" value="Enviar">
+                  </div>
 
                 </form>
               </div>

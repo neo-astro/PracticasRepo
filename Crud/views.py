@@ -1,3 +1,4 @@
+import datetime
 import json
 from django.shortcuts import HttpResponse, redirect, render,get_object_or_404
 from django.forms import modelform_factory
@@ -40,14 +41,14 @@ def ApiCiudad(reques,nombre_provincia):
 
 def usuario(request):
   if request.method == 'POST':
+    formUsuario = usuariosForm(request.POST)
     ciudadData = ciudad.objects.get(pk = request.POST.get('Ciudad'))
     provinciaData = provincia.objects.get(pk = request.POST.get('Provincia'))
-    formUsuario = usuariosForm(request.POST)
     formUsuario.fields['Ciudad'].queryset = ciudad.objects.filter(pk=ciudadData.pk)
     formUsuario.fields['Provincia'].queryset = provincia.objects.filter(pk=provinciaData.pk)
+    
 
-
-    print(f'Ingreso Post,  {formUsuario}')
+    # print(f'Ingreso Post,  {formUsuario}')
     if formUsuario.is_valid():
       print('ingreso de validacion')
       formUsuario.save()
@@ -64,6 +65,8 @@ def usuario(request):
       print(request.POST)
       error = "error"
       form = usuariosForm(request.POST)
+
+      
       pais_pk = form['Pais'].data
       provincia_pk = form['Provincia'].data
       ciudad_pk = form['Ciudad'].data
@@ -107,13 +110,80 @@ def usuario(request):
 
 def updateUsuario(request, N_Identificacion):
   if request.method == 'POST':
-    pass
-  else:
-    usuario = usuarios.objects.get(pk=N_Identificacion)
-    # usuario = get_object_or_404(usuarios, pk=N_Identificacion)
-    print(f'dato ${usuario}')
-    form = usuariosForm()
-    return render(request,'_usuarioUpdate.html',{'form':form})
+    #hacen lo mismo
+    # usuario = usuarios.objects.get(pk=N_Identificacion)
+    # usuario = get_object_or_404(usuarios, pk=N_Identificacion) 
+    # print('post', request.POST)
+    # usuario = get_object_or_404(usuarios, pk=N_Identificacion) 
+    # form = usuariosForm(instance = usuario)
+    # print('instancia', form)
+    # ciudadData = ciudad.objects.get(pk = request.POST.get('Ciudad'))
+    # provinciaData = provincia.objects.get(pk = request.POST.get('Provincia'))
+    # form.fields['Ciudad'].queryset = ciudad.objects.filter(pk=ciudadData.pk)
+    # form.fields['Provincia'].queryset = provincia.objects.filter(pk=provinciaData.pk)
+    print('el post',request.POST)
+    # usuario = get_object_or_404(usuarios, pk=N_Identificacion) 
+    # form = usuariosForm(instance = usuario)
+    form = usuariosForm(request.POST)
+    ciudadData = ciudad.objects.get(pk = request.POST.get('Ciudad'))
+    provinciaData = provincia.objects.get(pk = request.POST.get('Provincia'))
+    form.fields['Ciudad'].queryset = ciudad.objects.filter(pk=ciudadData.pk)
+    form.fields['Provincia'].queryset = provincia.objects.filter(pk=provinciaData.pk)
+    
+
+
+
+    if form.is_valid():
+      # usuario = form.save()
+      return HttpResponse('update')
+    else: 
+
+      # usuario = get_object_or_404(usuarios, pk=N_Identificacion) 
+      form = usuariosForm(request.POST)
+
+      # formPost = usuariosForm(request.POST)
+      
+      print('invalidoooooo' ,request.POST)
+      pais_pk =      form['Pais'].data
+      provincia_pk = form['Provincia'].data
+      ciudad_pk =    form['Ciudad'].data
+            #si fuese un objeto del select o dropdow a pais_pk(que solo es un string en este caso) cuando no lo es debo poner .pk al final
+      if pais_pk and provincia_pk ==None:
+        form.fields['Provincia'].queryset = provincia.objects.filter(Nompai=pais_pk)
+
+      if provincia_pk:
+        provincia_seleccionada = provincia.objects.get(pk=provincia_pk)
+        form.fields['Provincia'].queryset = provincia.objects.filter(pk=provincia_seleccionada.pk)
+
+      if provincia and ciudad_pk==None:
+        # ciudad_selecionada = ciudad.objects.get(pk=ciudad_pk)
+        form.fields['Ciudad'].queryset = ciudad.objects.filter(Nomprov=provincia_pk)
+
+      if ciudad_pk:
+        ciudad_selecionada = ciudad.objects.get(pk=ciudad_pk)
+        form.fields['Ciudad'].queryset = ciudad.objects.filter(pk=ciudad_selecionada.pk)
+
+      # Actualizamos el queryset del campo Provincia con el valor seleccionado
+      error = "error"
+      form.fields['Ciudad'].queryset = ciudad.objects.filter(pk= form['Ciudad'].data)
+      form.fields['Provincia'].queryset = provincia.objects.filter(pk=form['Provincia'].data)
+      return render(request, '_usuarioUpdate.html',{'form':form,'error':error})
+
+
+
+
+
+
+  # usuario = usuarios.objects.get(pk=N_Identificacion)
+  usuario = get_object_or_404(usuarios, pk=N_Identificacion) #devuelve la ci
+  form = usuariosForm(instance = usuario)
+  print(f'dato ${form}')
+  #form.fields['Fecha_Nac'].initial = usuario.Fecha_Nac.strftime('%Y-%m-%d') # ejemplo ia
+  form.fields['Fecha_Nac'].initial = usuario.Fecha_Nac
+  form.fields['Ciudad'].queryset = ciudad.objects.filter(pk=usuario.Ciudad)
+  form.fields['Provincia'].queryset = provincia.objects.filter(pk=usuario.Provincia)
+  
+  return render(request,'_usuarioUpdate.html',{'form':form})
 
 
 def deleteUser(request, N_Identificacion):

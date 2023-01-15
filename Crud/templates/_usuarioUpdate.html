@@ -15,20 +15,149 @@
 
 
 <!-- contenido estudiante  -->
-<div class="d-flex flex-column align-items-stretch  bg-light" style="width: 700px;">
+<div class="d-flex flex-column align-items-stretch  bg-light" style="width: 750px;">
 
   <div class="container-fluid mx-auto text-center bg-dark text-decoration-none text-light mb-1">
     <svg class="bi mt-1 me-2" width="40" height="40">
       <use xlink:href="#userPerfil" />
     </svg>
-    <p class="fs-5 mb-2 fw-semibold">Lista de Usuarios</p>
+    <p class="fs-5 mb-2 fw-semibold">Actualizar datos del Usuario</p>
   </div>
 
 
 
   <div class="list-group list-group-flush border-bottom  scrollarea">
 
-    {{form}}
+    <form id="usuario_form" method="POST" class="d-flex justify-content-center flex-wrap">
+      {% csrf_token %}
+
+
+
+      
+      <div class="row m-lg-2">
+        <div class="col-12 p-0 m-lg-4">
+
+
+          <div class="form-group  campform {% if form.Nombre.errors %}has-error{% endif %}" >
+            <labe class="control-label">{{form.Nombre.label_tag }}</labe>
+            {{ form.Nombre|add_class:"form-control w-75" }}
+            <!-- <input type="text" id="Nombre" value="{{ form.Nombre.value }}" name="Nombre" class="form-control" placeholder="Pepito Daniel"> -->
+            <span class="myerror">{{ form.Nombre.errors }}</span>
+          </div>
+  
+  
+          <div class="form-group campform  {% if form.Apellido_P.errors %}has-error{% endif %}">
+            <label class="control-label">{{form.Apellido_P.label_tag }}</label>
+            {{ form.Apellido_P|add_class:"form-control w-75" }}
+            <span class="myerror">{{ form.Apellido_P.errors }}</span>
+          </div>
+  
+  
+          <div class="form-group campform {% if form.Apellido_M.errors %}has-error{% endif %}">
+            <label class="control-label">{{form.Apellido_M.label_tag }}</label>
+            {{ form.Apellido_M|add_class:"form-control w-75" }}
+            <span class="myerror">{{ form.Apellido_M.errors }}</span>
+          </div>
+  
+  
+          <div class="form-group campform {% if form.Fecha_Nac.errors %}has-error{% endif %}">
+            <label class="control-label">{{form.Fecha_Nac.label_tag }}</label>
+            <!-- <input type="date" id="Fecha_Nac" value="{{ form.Fecha_Nac.value|date:'Y-m-d' }}" name="Fecha_Nac" class="form-control w-75" placeholder="dd/mm/aa"> -->
+            <!-- <input type="date" id="Fecha_Nac" value="{{ form.Fecha_Nac.value }}" name="Fecha_Nac" class="form-control"> -->
+            {{ form.Fecha_Nac|add_class:"form-control" }}
+            <span class="myerror">{{ form.Fecha_Nac.errors }}</span>
+  
+          </div>
+  
+  
+          <div class="form-group campform {% if form.Telf_Celular.errors %}has-error{% endif %}">
+            <label class="control-label">{{form.Telf_Celular.label_tag }}</label>
+            {{ form.Telf_Celular|add_class:"form-control w-75" }}
+            <span class="myerror">{{ form.Telf_Celular.errors }}</span>
+  
+  
+  
+          </div>
+  
+          <div class="form-group campform {% if form.Usu_Django.errors %}has-error{% endif %}">
+  
+            <label class="control-label">{{form.Usu_Django.label_tag }}</label>
+            {{ form.Usu_Django|add_class:"form-control w-75 " }}
+            <span class="myerror">{{ form.Usu_Django.errors }}</span>
+  
+          </div>
+  
+  
+  
+  
+  
+        </div>
+      </div>
+
+
+      <div class="row m-lg-2">
+        <div class="col-12 p-0 m-lg-4 ">
+
+
+          <div class="form-group campform {% if form.Pais.errors %}has-error{% endif %}">
+            <labe class="control-label">{{form.Pais.label_tag }}</labe>
+            {{ form.Pais|add_class:"form-control w-75" }}
+            <span class="myerror">{{ form.Pais.errors }}</span>
+          </div>
+  
+          <div class="form-group campform {% if form.Provincia.errors %} has-error {% endif %}">
+            <labe class="control-label">{{form.Provincia.label_tag }}</labe>
+            <!-- {{ form.field.Provincia}} solo con el label -->
+            <!-- <select name="Provincia" label="Provincia" id="id_Provincia" class="form-control drop">
+              <option value="" selected disabled>Seleciona la provincia</option>
+            </select> -->
+  
+  
+            {{ form.Provincia|add_class:"form-control  w-75" }}
+            <span class="myerror">{{ form.Provincia.errors }}</span>
+          </div>
+  
+  
+          <div class="form-group campform {% if form.Ciudad.errors %}has-error{% endif %}">
+            <labe class="control-label">{{form.Ciudad.label_tag }}</labe>
+            <!-- {{ form.field.Ciudad}} -->
+            <!-- <select name="Ciudad" label="Ciudad" id="id_Ciudad" class="form-control drop">
+              <option value="" selected disabled>Seleciona la provincia</option>
+            </select> -->
+  
+            {{ form.Ciudad|add_class:"form-control  w-75" }}
+            <span class="myerror">{{ form.Ciudad.errors }}</span>
+          </div>
+  
+  
+  
+  
+          <div class="form-group campform {% if form.T_Identificacion.errors %}has-error{% endif %}">
+            <labe class="control-label">{{form.T_Identificacion.label_tag }}</labe>
+            {{ form.T_Identificacion|add_class:"form-control  w-75" }}
+            <span class="myerror">{{ form.T_Identificacion.errors }}</span>
+          </div>
+  
+  
+
+
+            
+          <div class="form-group {% if form.N_Identificacion.errors %}has-error{% endif %}" >
+            <labe class="control-label">{{form.N_Identificacion.label_tag }}</labe>
+            <!-- {{ form.N_Identificacion|add_class:"form-control drop  w-75" }}  -->
+            {{ form.N_Identificacion|add_class:"form-control  w-75"}}
+            <!-- <input type="text" id="id_N_Identificacion" name="N_Identificacion" class="form-control drop w-75" value="{{ form.N_Identificacion.value}}" readonly disabled>           -->
+            <span class="myerror">{{ form.N_Identificacion.errors }}</span>
+          </div>
+  
+  
+        </div>
+      </div>
+
+        <input type="submit" class="mx-auto btn btn-dark mb-3 w-50 fw-bold" value="Actualizar">
+        <bh>
+
+    </form>
     
 
 
@@ -186,6 +315,29 @@
   //   console.log(e)
   // })
 
+   // funciones
+   function CompleteDropdown(data,selectAllenar,campoName,nombreLabel){
+    selectAllenar.innerHTML = `<option value="" selected disabled>${nombreLabel}</option>`
+    data.forEach(function(e){
+
+      selectAllenar.innerHTML +=  `<option value="${e[campoName]}">${e[campoName]}</option>`
+    })
+  }
+  function ListenSelect(Objeto,ruta,selectAllenar,campoName,nombreLabel){
+    Objeto.addEventListener('change',
+    function(){
+      var selectedOption = this.options[Objeto.selectedIndex];
+      fetch(ruta + `${selectedOption.value}/`)
+      .then((response) => response.json())
+      .then((data) => CompleteDropdown(data,selectAllenar,campoName,nombreLabel));
+      // console.log(selectedOption.value + ': ' + selectedOption.text);
+
+    });
+  }
+
+  ListenSelect(select,'http://127.0.0.1:8000/provincia/',provincia,'Nomprov','Seleccione la Provincia')
+  ListenSelect(provincia,'http://127.0.0.1:8000/ciudad/',ciudad,'Nomcant','Seleccione la Ciudad')
+
   function del(e) {
     document.getElementById('confirm').innerHTML = `<a  class="btn btn-danger" href='${e.href}'>Eliminar</a >`
   }
@@ -198,7 +350,7 @@
 
 {% if error %}
 <script type="text/javascript">
-  document.getElementById("actModal").click()
+  // document.getElementById("actModal").click()
   
   const inputs = document.querySelectorAll("input");
   const selects = document.querySelectorAll("select");
