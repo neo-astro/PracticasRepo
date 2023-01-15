@@ -125,8 +125,9 @@ class usuariosForm(forms.ModelForm):
     tpi = cleaned_data.get("T_Identificacion")
     numero_tpi = cleaned_data.get("N_Identificacion")
     
-    if usuarios.objects.filter(N_Identificacion=numero_tpi).exists():
-        self.add_error('N_Identificacion', 'El numero de identificacion ya ha sido registrado.')
+    #funciona valida que no se repita la pk
+    # if usuarios.objects.filter(N_Identificacion=numero_tpi).exists():
+    #     self.add_error('N_Identificacion', 'El numero de identificacion ya ha sido registrado.')
 
     
     if tpi and numero_tpi:

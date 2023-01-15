@@ -46,7 +46,9 @@ def usuario(request):
     provinciaData = provincia.objects.get(pk = request.POST.get('Provincia'))
     formUsuario.fields['Ciudad'].queryset = ciudad.objects.filter(pk=ciudadData.pk)
     formUsuario.fields['Provincia'].queryset = provincia.objects.filter(pk=provinciaData.pk)
-    
+    ci = request.POST.get('N_Identidad')
+
+    #validar pk no repetida
 
     # print(f'Ingreso Post,  {formUsuario}')
     if formUsuario.is_valid():
@@ -56,6 +58,9 @@ def usuario(request):
       form = usuariosForm()
       success='!Usuario creado con Exito!'
       listaUsuarios = usuarios.objects.all()
+      # if usuarios.objects.filter(N_Identificacion=ci).exists():
+      #   formUsuario.add_error('N_Identificacion', 'El numero de identificacion ya ha sido registrado.')
+      #   return render(request, '_usuario.html',{'success':success,'form':form,'usuarios':listaUsuarios})
       return render(request, '_usuario.html',{'success':success,'form':form,'usuarios':listaUsuarios})
 
     else: 
