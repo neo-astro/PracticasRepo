@@ -90,7 +90,7 @@ class alumnos(models.Model):
 # formularios
 # widget=forms.Select(attrs={'disabled': 'disabled'})
 class alumnosForm(forms.ModelForm):
-    # usua       =  forms.IntegerField( label='usua')  
+    # usua       =  forms.IntegerField( label='usua')  #
     Nom_carr     =  forms.ModelChoiceField(queryset=carrera.objects.all(),      required=True ,empty_label="Seleccione una Carrera", label='Carrera', error_messages={'required': 'Selecciona el tipo de carrera que pertenece.','required': 'Este campo es requerido'}   ,       )
     Fecha_Inici  = forms.DateField(widget=forms.TextInput(attrs={'type': 'date'})  ,                                          required=True , label="Fecha de inicio",error_messages={'invalid': 'Ingrese una fecha válida.','required':'El campo es requerido'})
      

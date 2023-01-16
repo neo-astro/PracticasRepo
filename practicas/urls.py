@@ -9,6 +9,7 @@ urlpatterns = [
     path('tasks/', views.tasks, name='tasks'),
     path('estudiante/', views.Estudiante,name='estudiante'),
     path('estudiante/eliminar/<str:id>/', views.deleteEstudiante),
+    path('estudiante/update/<str:id>/', views.updateEstudiante),
 
     path('usuario/', views.usuario,name='usuario'),
     path('usuario/update/<str:N_Identificacion>/', views.updateUsuario,name='usuarioupdate'),

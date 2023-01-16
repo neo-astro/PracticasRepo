@@ -19,15 +19,22 @@ def tasks(request):
 #   return render(request, '_estudiante.html',{'form': formEstudiante})
 def Estudiante(request):
   #usa es el campo que tiene la fk
-  listaEstudiantes = alumnos.objects.select_related('usua').all()
+  listaEstudiantes = alumnos.objects.select_related('usua','Nom_carr').all()
   print(listaEstudiantes)
-  msmDelete = request.session.get('msmDelete')
-  if request.session.get('msmDelete'):
-    del request.session['msmDelete']
+
+  msmNoAsignado = request.session.get('msmNoAsignado')
+  if request.session.get('msmNoAsignado'):
+    del request.session['msmNoAsignado']
+
+  msmUpdate = request.session.get('msmUpdate')
+  if request.session.get('msmUpdate'):
+    del request.session['msmUpdate']
+
 
   return render(request, '_estudiante.html',{
     'estudiantes': listaEstudiantes,
-    'msmDelete':msmDelete
+    'msmNoAsignado':msmNoAsignado,
+    'msmUpdate':msmUpdate
     })
 
 
@@ -201,24 +208,13 @@ def updateUsuario(request, N_Identificacion):
     if form.is_valid():
       form.save()
       print('se ACTUALIZO')
-      # listaEstudiantes = alumnos.objects.select_related('usuarios').all()
-      # return redirect('usuario')
       request.session['msmUpdate']= "Usuario Actualizado"
       return redirect('usuario')
-      # success='!Usuario creado con Exito!'
-      # form = usuariosForm()
-      # formProfesor = profesoresForm()
-      # formEstudiante = alumnosForm()
-      # listaUsuarios = usuarios.objects.all()
-      # url = reverse('usuario',kwargs={'success':success,'formProfesor':formProfesor,'formEstudiante':formEstudiante,'listaUsuarios':listaUsuarios})
-      # return redirect(url)
     else: 
 
       # usuario = get_object_or_404(usuarios, pk=N_Identificacion) 
       form = usuariosForm(request.POST)
 
-      # formPost = usuariosForm(request.POST)
-      
       print('invalidoooooo' ,request.POST)
       pais_pk =      form['Pais'].data
       provincia_pk = form['Provincia'].data
@@ -258,6 +254,38 @@ def updateUsuario(request, N_Identificacion):
 
 
 
+def updateEstudiante(request, id):
+  if request.method == 'POST':
+    # print('en el post', request.POST)
+    # Estudiante = alumnos.objects.get(pk=id)
+    # form = alumnosForm(request.POST or None, instance=Estudiante)
+
+
+
+
+    form = alumnosForm(request.POST)
+    Estudiante = alumnos.objects.get( pk = id)    
+    dataCarrera =  request.POST.get('Nom_carr') 
+    if dataCarrera:
+      carreraNombre = carrera.objects.get(pk=request.POST.get('Nom_carr'))
+      form.fields['Nom_carr'].queryset = carrera.objects.filter(pk=carreraNombre.pk)
+        
+    if form.is_valid():
+      form.save()
+      request.session['msmUpdate']= "Datos estudiante actualizados"
+      return redirect('estudiante')
+    else:
+      request.session['msmNoAsignado'] = 'Datos invalidos intente nuevamente'
+      return redirect('estudiante')
+  
+  Estudiante = get_object_or_404(alumnos, pk=id) #devuelve la ci
+  print('la pk de estudiante',Estudiante.id)
+  form = alumnosForm(instance = Estudiante)
+
+  return render(request, '_estudianteUpdate.html',{'form': form,'id':Estudiante.id})    
+    
+
+
 
 def deleteUser(request, N_Identificacion):
   usuario = usuarios.objects.get(pk=N_Identificacion)
@@ -267,9 +295,10 @@ def deleteUser(request, N_Identificacion):
 
 
 def deleteEstudiante(request, id):
+  print(id, 'eliminarrrrrrrrrrrrrrrr')
   estudiante = alumnos.objects.get(pk=id)
   estudiante.delete()
-  request.session['msmDelete'] = 'Estudiante Eliminado'
+  request.session['msmNoAsignado'] = 'Estudiante Eliminado'
   return redirect('estudiante')
 
 
@@ -278,11 +307,7 @@ def deleteEstudiante(request, id):
 def asignarEstudiante(request):
   if request.method == 'POST':
     form = alumnosForm(request.POST)
-
-    # dataUsuario = request.POST.get('usua')
-    # if dataUsuario:
-    usuario = usuarios.objects.get( pk = request.POST.get('usua'))
-    
+    usuario = usuarios.objects.get( pk = request.POST.get('usua'))    
     dataCarrera =  request.POST.get('Nom_carr') 
     if dataCarrera:
       carreraNombre = carrera.objects.get(pk=request.POST.get('Nom_carr'))

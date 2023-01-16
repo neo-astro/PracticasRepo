@@ -1,0 +1,217 @@
+{% extends "index.html" %}
+
+
+{% block contend %}
+
+{% load widget_tweaks %}
+<link rel="stylesheet" href="../static/css/styles.css">
+<link rel="stylesheet" href="../static/css/sidebar.css">
+
+
+
+
+
+
+
+<!-- contenido estudiante  -->
+<div class="d-flex flex-column align-items-stretch  bg-light" style="width: 750px;">
+
+  <div class="container-fluid mx-auto text-center bg-dark text-decoration-none text-light mb-1">
+    <svg class="bi mt-1 me-2" width="40" height="40">
+      <use xlink:href="#userPerfil" />
+    </svg>
+    <p class="fs-5 mb-2 fw-semibold">Actualizar datos del Usuario</p>
+  </div>
+
+
+
+  <div class="list-group list-group-flush border-bottom  scrollarea">
+
+    <form id="usuario_form" method="POST" class="d-flex justify-content-center flex-wrap">
+      {% csrf_token %}
+
+
+
+
+      <!-- <input class="invisible col" name="usua" id="id_usua" value="{{form.usua}}" type="text"> -->
+
+      
+      <div class="row m-lg-2">
+        <div class="col-12 p-0 m-lg-4">
+          <select  class="invisible col" name="id" id="id_alumnos">
+            <option value="{{id}}" id="selectUsuHidden" selected>usuario selecionado</option>
+          </select>
+          <div class="form-group  campform {% if form.Nombre.errors %}has-error{% endif %}" >
+            <labe class="control-label">{{form.Fecha_Inici.label_tag }}</labe>
+            {{ form.Fecha_Inici|add_class:"form-control w-75" }}
+            <!-- <input type="text" id="Nombre" value="{{ form.Nombre.value }}" name="Nombre" class="form-control" placeholder="Pepito Daniel"> -->
+            <span class="myerror">{{ form.Fecha_Inici.errors }}</span>
+          </div>
+  
+          <div class="form-group  campform {% if form.Nombre.errors %}has-error{% endif %}" >
+            <labe class="control-label">{{form.Nom_carr.label_tag }}</labe>
+            {{ form.Nom_carr|add_class:"form-control w-75" }}
+            <!-- <input type="text" id="Nombre" value="{{ form.Nombre.value }}" name="Nombre" class="form-control" placeholder="Pepito Daniel"> -->
+            <span class="myerror">{{ form.Nom_carr.errors }}</span>
+          </div>
+  
+  
+  
+  
+        </div>
+      </div>
+
+
+      <div class="col-12 text-center">
+        <input type="submit" class="mx-auto btn btn-dark mb-3 w-50 fw-bold" value="Actualizar">
+        <bh>
+      </div>
+
+
+
+    </form>
+    
+
+
+  </div>
+</div>
+
+
+
+
+
+</div>
+
+
+
+<div class="b-example-divider" style="width:80px"></div>
+
+
+
+<!-- barra opciones -->
+
+<div class="d-flex flex-column   bg-light" style="width: 180px;">
+
+  <div class="d-flex flex-column  h-100 ">
+
+
+
+    <a class="mt-3  text-center text-decoration-none  btn-circle  mx-auto" href="/estudiante" style="width: 70px ; height: 70px;">
+      <img  src="https://cdn-icons-png.flaticon.com/512/4939/4939785.png" width="40px" height="40px" alt="">
+    </a>
+
+
+
+  </div>
+
+
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script type="text/javascript">
+
+  var d = document
+  var select = document.getElementById('id_Pais');
+  var provincia = document.getElementById('id_Provincia')
+  var ciudad = document.getElementById('id_Ciudad')
+
+
+    // Eliminamos la propiedad required de todos los campos de entrada
+  d.querySelectorAll('input').forEach(function(input) {
+  input.removeAttribute('required');
+  });
+  d.querySelectorAll('select').forEach(function(input) {
+    input.removeAttribute('required');
+  });
+
+  function del(e) {
+    document.getElementById('confirm').innerHTML = `<a  class="btn btn-danger" href='${e.href}'>Eliminar</a >`
+  }
+  
+
+</script>
+
+
+
+
+{% if error %}
+<script type="text/javascript">
+  // document.getElementById("actModal").click()
+  
+  const inputs = document.querySelectorAll("input");
+  const selects = document.querySelectorAll("select");
+  selects.forEach(select => {
+    select.addEventListener("change", function() {
+      // Elimina la clase que agrega el borde rojo
+      this.parentElement.classList.remove("has-error");
+      this.nextElementSibling.style.display= "none";
+    });
+  });
+  // Agrega un evento de "cambio" a cada uno de los campos de entrada
+  inputs.forEach(input => {
+    input.addEventListener("change", function() {
+      // Elimina la clase que agrega el borde rojo
+      this.parentElement.classList.remove("has-error");
+      this.nextElementSibling.style.display= "none";
+    });
+  });
+</script>  
+{% endif %}
+
+{% if success %}
+  <div id="alertSuccess" class="alertSuccess  w-25 rounded text-center alert alert-success alert-dismissible fade show" role="alert">
+    {{ success }}
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+  </div>
+  <script type="text/javascript">
+    $alert = document.getElementById("alertSuccess")
+    setTimeout( ()=>{
+      $alert.parentNode.removeChild($alert)
+    }, 3000) 
+
+  </script>  
+{% endif %}
+
+
+{% if msmNoAsignado %}
+<div id="alertSuccess" class="alertSuccess  w-25 rounded text-center alert alert-danger alert-dismissible fade show" role="alert">
+     {{ msmNoAsignado }}
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+  </div>
+  <script type="text/javascript">
+    $alert = document.getElementById("alertSuccess")
+    setTimeout( ()=>{
+      $alert.parentNode.removeChild($alert)
+    }, 3000) 
+  </script>  
+{% endif %}
+
+{% if msmUpdate %}
+  <div id="alertSuccess" class="alertSuccess  w-25 rounded text-center alert alert-success alert-dismissible fade show" role="alert">
+    {{ msmUpdate }}
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+  </div>
+  <script type="text/javascript">
+    $alert = document.getElementById("alertSuccess")
+    setTimeout( ()=>{
+      $alert.parentNode.removeChild($alert)
+    }, 3000) 
+  </script>  
+{% endif %}
+
+
+{% endblock %}
+
