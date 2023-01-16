@@ -1,4 +1,4 @@
-import datetime
+from audioop import reverse
 import json
 from django.shortcuts import HttpResponse, redirect, render,get_object_or_404
 from django.forms import modelform_factory
@@ -44,6 +44,7 @@ def ApiCiudad(reques,nombre_provincia):
 def usuario(request):
   if request.method == 'POST':
     formUsuario = usuariosForm(request.POST)
+    
     ciudadData = ciudad.objects.get(pk = request.POST.get('Ciudad'))
     provinciaData = provincia.objects.get(pk = request.POST.get('Provincia'))
     formUsuario.fields['Ciudad'].queryset = ciudad.objects.filter(pk=ciudadData.pk)
@@ -89,14 +90,15 @@ def usuario(request):
       print('ingreso de validacion')
       formUsuario.save()
       print('guardado')
-      form = usuariosForm()
-      success='!Usuario creado con Exito!'
-      listaUsuarios = usuarios.objects.all()
       # if usuarios.objects.filter(N_Identificacion=ci).exists():
       #   formUsuario.add_error('N_Identificacion', 'El numero de identificacion ya ha sido registrado.')
       #   return render(request, '_usuario.html',{'success':success,'form':form,'usuarios':listaUsuarios})
-      return render(request, '_usuario.html',{'success':success,'form':form,'usuarios':listaUsuarios})
-
+      success='!Usuario creado con Exito!'
+      form = usuariosForm()
+      formProfesor = profesoresForm()
+      formEstudiante = alumnosForm()
+      listaUsuarios = usuarios.objects.all()
+      return render(request, '_usuario.html',{'form':form,'usuarios':listaUsuarios,'success':success,'formEstudiante':formEstudiante,'formProfesor':  formProfesor})
     else: 
 
       error = "error"
@@ -133,11 +135,16 @@ def usuario(request):
 
       listaUsuarios = usuarios.objects.all()
       return render(request, '_usuario.html',{'form':form,'error':error,'usuarios':listaUsuarios})
+  msmUpdate = request.session.get('msmUpdate')
+  if request.session.get('msmUpdate'):
+      del request.session['msmUpdate']
+
+
   form = usuariosForm()
   formProfesor = profesoresForm()
   formEstudiante = alumnosForm()
   listaUsuarios = usuarios.objects.all()
-  return render(request, '_usuario.html',{'form':form,'usuarios':listaUsuarios,'formEstudiante':formEstudiante,'formProfesor':  formProfesor})
+  return render(request, '_usuario.html',{'form':form,'usuarios':listaUsuarios,'formEstudiante':formEstudiante,'formProfesor':  formProfesor,'msmUpdate':msmUpdate})
 
 
 
@@ -160,11 +167,16 @@ def updateUsuario(request, N_Identificacion):
       form.save()
       print('se ACTUALIZO')
       # listaEstudiantes = alumnos.objects.select_related('usuarios').all()
-      success='Usuario actualizado'
-      form = usuariosForm()
-      listaUsuarios = usuarios.objects.all()
-      return render(request, '_usuario.html',{'success':success,'form':form,'usuarios':listaUsuarios})
-
+      # return redirect('usuario')
+      request.session['msmUpdate']= "Usuario Actualizado"
+      return redirect('usuario')
+      # success='!Usuario creado con Exito!'
+      # form = usuariosForm()
+      # formProfesor = profesoresForm()
+      # formEstudiante = alumnosForm()
+      # listaUsuarios = usuarios.objects.all()
+      # url = reverse('usuario',kwargs={'success':success,'formProfesor':formProfesor,'formEstudiante':formEstudiante,'listaUsuarios':listaUsuarios})
+      # return redirect(url)
     else: 
 
       # usuario = get_object_or_404(usuarios, pk=N_Identificacion) 
@@ -197,12 +209,6 @@ def updateUsuario(request, N_Identificacion):
       form.fields['Ciudad'].queryset = ciudad.objects.filter(pk= form['Ciudad'].data)
       form.fields['Provincia'].queryset = provincia.objects.filter(pk=form['Provincia'].data)
       return render(request, '_usuarioUpdate.html',{'form':form,'error':error})
-
-
-
-
-
-
   # usuario = usuarios.objects.get(pk=N_Identificacion)
   usuario = get_object_or_404(usuarios, pk=N_Identificacion) #devuelve la ci
   form = usuariosForm(instance = usuario)
