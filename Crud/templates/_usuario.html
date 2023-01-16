@@ -631,7 +631,6 @@
   
   function btnAsignar(e){
     $inputNident = document.getElementById('selectUsuHidden')
-    alert(e.getAttribute('data-user'))
     $inputNident.value  = e.getAttribute('data-user')
     console.log('valor option', $inputNident.value)
   }
@@ -653,26 +652,6 @@
     d.getElementById('formProfesor').classList.add('d-none')
     d.getElementById('formEstudiante').classList.add('d-none')
   }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 //con el codgio del selst dinamico descargado
   // document.querySelectorAll('input').forEach(function(input){
@@ -792,6 +771,33 @@
   </script>  
 {% endif %}
 
+
+{% if msmAsignado %}
+<div id="alertSuccess" class="alertSuccess  w-25 rounded text-center alert alert-success alert-dismissible fade show" role="alert">
+     {{ msmAsignado }}
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+  </div>
+  <script type="text/javascript">
+    $alert = document.getElementById("alertSuccess")
+    setTimeout( ()=>{
+      $alert.parentNode.removeChild($alert)
+    }, 3000) 
+  </script>  
+{% endif %}
+
+
+{% if msmNoAsignado %}
+<div id="alertSuccess" class="alertSuccess  w-25 rounded text-center alert alert-danger alert-dismissible fade show" role="alert">
+     {{ msmNoAsignado }}
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+  </div>
+  <script type="text/javascript">
+    $alert = document.getElementById("alertSuccess")
+    setTimeout( ()=>{
+      $alert.parentNode.removeChild($alert)
+    }, 3000) 
+  </script>  
+{% endif %}
 
 {% endblock %}
 

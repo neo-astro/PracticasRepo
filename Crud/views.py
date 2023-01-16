@@ -21,7 +21,14 @@ def Estudiante(request):
   #usa es el campo que tiene la fk
   listaEstudiantes = alumnos.objects.select_related('usua').all()
   print(listaEstudiantes)
-  return render(request, '_estudiante.html',{'Estudiantes': listaEstudiantes})
+  msmDelete = request.session.get('msmDelete')
+  if request.session.get('msmDelete'):
+    del request.session['msmDelete']
+
+  return render(request, '_estudiante.html',{
+    'estudiantes': listaEstudiantes,
+    'msmDelete':msmDelete
+    })
 
 
 #modelos para la vista
@@ -45,10 +52,15 @@ def usuario(request):
   if request.method == 'POST':
     formUsuario = usuariosForm(request.POST)
 
-    ciudadData = ciudad.objects.get(pk = request.POST.get('Ciudad'))
-    provinciaData = provincia.objects.get(pk = request.POST.get('Provincia'))
-    formUsuario.fields['Ciudad'].queryset = ciudad.objects.filter(pk=ciudadData.pk)
-    formUsuario.fields['Provincia'].queryset = provincia.objects.filter(pk=provinciaData.pk)
+    dataciudad = request.POST.get('Ciudad')
+    if dataciudad:
+      ciudadData = ciudad.objects.get(pk = dataciudad)
+      formUsuario.fields['Ciudad'].queryset = ciudad.objects.filter(pk=ciudadData.pk)
+      
+    dataprovincia = request.POST.get('Provincia')  
+    if dataprovincia:
+      provinciaData = provincia.objects.get(pk = dataprovincia)
+      formUsuario.fields['Provincia'].queryset = provincia.objects.filter(pk=provinciaData.pk)
 
     # ci = request.POST.get('N_Identidad')
     if usuarios.objects.filter(N_Identificacion=request.POST.get('N_Identificacion')).exists():
@@ -105,7 +117,6 @@ def usuario(request):
       error = "error"
       form = usuariosForm(request.POST)
       print(request.POST)
-      
       pais_pk = form['Pais'].data
       provincia_pk = form['Provincia'].data
       ciudad_pk = form['Ciudad'].data
@@ -132,22 +143,43 @@ def usuario(request):
 
       form.fields['Provincia'].initial =request.POST.get('Provincia')
       form.fields['Ciudad'].initial = request.POST.get('Ciudad')
-
-
+      formProfesor = profesoresForm()
+      formEstudiante = alumnosForm()
       listaUsuarios = usuarios.objects.all()
-      return render(request, '_usuario.html',{'form':form,'error':error,'usuarios':listaUsuarios})
+      return render(request, '_usuario.html',{'form':form,'error':error,'usuarios':listaUsuarios,'formEstudiante':formEstudiante,'formProfesor':  formProfesor})
+  
   msmUpdate = request.session.get('msmUpdate')
   if request.session.get('msmUpdate'):
       del request.session['msmUpdate']
+
   msmDelete = request.session.get('msmDelete')
   if request.session.get('msmDelete'):
     del request.session['msmDelete']
+
+  msmAsignado = request.session.get('msmAsignado')
+  if request.session.get('msmAsignado'):
+    del request.session['msmAsignado']
+
+
+  msmNoAsignado = request.session.get('msmNoAsignado')
+  if request.session.get('msmNoAsignado'):
+    del request.session['msmNoAsignado']
+
 
   form = usuariosForm()
   formProfesor = profesoresForm()
   formEstudiante = alumnosForm()
   listaUsuarios = usuarios.objects.all()
-  return render(request, '_usuario.html',{'form':form,'usuarios':listaUsuarios,'formEstudiante':formEstudiante,'formProfesor':  formProfesor,'msmUpdate':msmUpdate, 'msmDelete':msmDelete})
+  return render(request, '_usuario.html',{
+    'form':form,
+    'usuarios':listaUsuarios,
+    'formEstudiante':formEstudiante,
+    'formProfesor':  formProfesor,
+    'msmUpdate':msmUpdate, 
+    'msmDelete':msmDelete,
+    'msmAsignado':msmAsignado,
+    'msmNoAsignado':msmNoAsignado
+    })
 
 
 
@@ -234,23 +266,39 @@ def deleteUser(request, N_Identificacion):
   return redirect('usuario')
 
 
+def deleteEstudiante(request, id):
+  estudiante = alumnos.objects.get(pk=id)
+  estudiante.delete()
+  request.session['msmDelete'] = 'Estudiante Eliminado'
+  return redirect('estudiante')
+
+
 
   
 def asignarEstudiante(request):
   if request.method == 'POST':
-    print(request.POST)
-    print("entro al post hp")
+    form = alumnosForm(request.POST)
+
+    # dataUsuario = request.POST.get('usua')
+    # if dataUsuario:
     usuario = usuarios.objects.get( pk = request.POST.get('usua'))
-    print('dato con referencia',usuarios.objects.get( pk = request.POST.get('usua')))
-    carreraNombre = carrera.objects.get(pk=request.POST.get('Nom_carr'))
-    print(f'datos {usuario} , {carreraNombre}')
-    alumnos.objects.create(usua = usuario, Nom_carr=carreraNombre, Fecha_Inici=request.POST.get('Fecha_Inici', None))
-    print('guardado')
-    return HttpResponse('EXITOU')
+    
+    dataCarrera =  request.POST.get('Nom_carr') 
+    if dataCarrera:
+      carreraNombre = carrera.objects.get(pk=request.POST.get('Nom_carr'))
+      form.fields['Nom_carr'].queryset = carrera.objects.filter(pk=carreraNombre.pk)
+    
+    if form.is_valid():
+      alumnos.objects.create(usua = usuario, Nom_carr=carreraNombre, Fecha_Inici=request.POST.get('Fecha_Inici', None))
+      request.session['msmAsignado'] = 'Usuario asignado con exito'
+      return redirect('usuario')
+    else:
+      request.session['msmNoAsignado'] = 'Datos invalidos intente nuevamente'
+      return redirect('usuario')
+
+
     #return HttpResponse('Hola')
-  else:
-    print("no")
-    return render(request, 'estudiante.html')
+  return render(request, '_estudiante.html')
   # return render(request, 'index.html')
   
   
