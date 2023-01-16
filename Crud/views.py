@@ -18,8 +18,10 @@ def tasks(request):
 #   formEstudiante = alumnosForm()
 #   return render(request, '_estudiante.html',{'form': formEstudiante})
 def Estudiante(request):
-  formEstudiante = alumnosForm()
-  return render(request, '_estudiante.html',{'form': formEstudiante})
+  #usa es el campo que tiene la fk
+  listaEstudiantes = alumnos.objects.select_related('usua').all()
+  print(listaEstudiantes)
+  return render(request, '_estudiante.html',{'Estudiantes': listaEstudiantes})
 
 
 #modelos para la vista
@@ -46,10 +48,42 @@ def usuario(request):
     provinciaData = provincia.objects.get(pk = request.POST.get('Provincia'))
     formUsuario.fields['Ciudad'].queryset = ciudad.objects.filter(pk=ciudadData.pk)
     formUsuario.fields['Provincia'].queryset = provincia.objects.filter(pk=provinciaData.pk)
-    ci = request.POST.get('N_Identidad')
+    # ci = request.POST.get('N_Identidad')
+    if usuarios.objects.filter(N_Identificacion=request.POST.get('N_Identificacion')).exists():
+      formUsuario.add_error('N_Identificacion', 'El numero de identificacion ya ha sido registrado.')
+      error = "error"
+      print(request.POST)
+      
+      pais_pk = formUsuario['Pais'].data
+      provincia_pk = formUsuario['Provincia'].data
+      ciudad_pk = formUsuario['Ciudad'].data
 
-    #validar pk no repetida
+      #si fuese un objeto del select o dropdow a pais_pk(que solo es un string en este caso) cuando no lo es debo poner .pk al final
+      if pais_pk and provincia_pk ==None:
+        formUsuario.fields['Provincia'].queryset = provincia.objects.filter(Nompai=pais_pk)
 
+      if provincia_pk:
+        provincia_seleccionada = provincia.objects.get(pk=provincia_pk)
+        formUsuario.fields['Provincia'].queryset = provincia.objects.filter(pk=provincia_seleccionada.pk)
+
+      if provincia and ciudad_pk==None:
+        # ciudad_selecionada = ciudad.objects.get(pk=ciudad_pk)
+        formUsuario.fields['Ciudad'].queryset = ciudad.objects.filter(Nomprov=provincia_pk)
+
+      if ciudad_pk:
+        ciudad_selecionada = ciudad.objects.get(pk=ciudad_pk)
+        formUsuario.fields['Ciudad'].queryset = ciudad.objects.filter(pk=ciudad_selecionada.pk)
+
+      # Actualizamos el queryset del campo Provincia con el valor seleccionado
+
+      print(provincia_pk)
+
+      formUsuario.fields['Provincia'].initial =request.POST.get('Provincia')
+      formUsuario.fields['Ciudad'].initial = request.POST.get('Ciudad')
+
+
+      listaUsuarios = usuarios.objects.all()
+      return render(request, '_usuario.html',{'form':formUsuario,'error':error,'usuarios':listaUsuarios})
     # print(f'Ingreso Post,  {formUsuario}')
     if formUsuario.is_valid():
       print('ingreso de validacion')
@@ -64,13 +98,10 @@ def usuario(request):
       return render(request, '_usuario.html',{'success':success,'form':form,'usuarios':listaUsuarios})
 
     else: 
-      print('invalido')
-      # form.cleaned_data['Provincia']
-      # print(usuariosForm(request.POST))
-      print(request.POST)
+
       error = "error"
       form = usuariosForm(request.POST)
-
+      print(request.POST)
       
       pais_pk = form['Pais'].data
       provincia_pk = form['Provincia'].data
@@ -112,24 +143,11 @@ def usuario(request):
 
 
 
-
 def updateUsuario(request, N_Identificacion):
   if request.method == 'POST':
-    #hacen lo mismo
-    # usuario = usuarios.objects.get(pk=N_Identificacion)
-    # usuario = get_object_or_404(usuarios, pk=N_Identificacion) 
-    # print('post', request.POST)
-    # usuario = get_object_or_404(usuarios, pk=N_Identificacion) 
-    # form = usuariosForm(instance = usuario)
-    # print('instancia', form)
-    # ciudadData = ciudad.objects.get(pk = request.POST.get('Ciudad'))
-    # provinciaData = provincia.objects.get(pk = request.POST.get('Provincia'))
-    # form.fields['Ciudad'].queryset = ciudad.objects.filter(pk=ciudadData.pk)
-    # form.fields['Provincia'].queryset = provincia.objects.filter(pk=provinciaData.pk)
-    print('el post',request.POST)
-    # usuario = get_object_or_404(usuarios, pk=N_Identificacion) 
-    # form = usuariosForm(instance = usuario)
-    form = usuariosForm(request.POST)
+
+    usuario = usuarios.objects.get(pk=N_Identificacion)
+    form = usuariosForm(request.POST or None, instance=usuario)
     ciudadData = ciudad.objects.get(pk = request.POST.get('Ciudad'))
     provinciaData = provincia.objects.get(pk = request.POST.get('Provincia'))
     form.fields['Ciudad'].queryset = ciudad.objects.filter(pk=ciudadData.pk)
@@ -139,8 +157,14 @@ def updateUsuario(request, N_Identificacion):
 
 
     if form.is_valid():
-      # usuario = form.save()
-      return HttpResponse('update')
+      form.save()
+      print('se ACTUALIZO')
+      # listaEstudiantes = alumnos.objects.select_related('usuarios').all()
+      success='Usuario actualizado'
+      form = usuariosForm()
+      listaUsuarios = usuarios.objects.all()
+      return render(request, '_usuario.html',{'success':success,'form':form,'usuarios':listaUsuarios})
+
     else: 
 
       # usuario = get_object_or_404(usuarios, pk=N_Identificacion) 
@@ -191,6 +215,9 @@ def updateUsuario(request, N_Identificacion):
   return render(request,'_usuarioUpdate.html',{'form':form})
 
 
+
+
+
 def deleteUser(request, N_Identificacion):
   usuario = usuarios.objects.get(pk=N_Identificacion)
   usuario.delete()
@@ -204,8 +231,9 @@ def asignarEstudiante(request):
     print(request.POST)
     print("entro al post hp")
     usuario = usuarios.objects.get( pk = request.POST.get('usua'))
+    print('dato con referencia',usuarios.objects.get( pk = request.POST.get('usua')))
     carreraNombre = carrera.objects.get(pk=request.POST.get('Nom_carr'))
-    print(f'datp {usuario} , {carreraNombre}')
+    print(f'datos {usuario} , {carreraNombre}')
     alumnos.objects.create(usua = usuario, Nom_carr=carreraNombre, Fecha_Inici=request.POST.get('Fecha_Inici', None))
     print('guardado')
     return HttpResponse('EXITOU')

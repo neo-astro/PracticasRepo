@@ -7,7 +7,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('',views.home, name='index'),
     path('tasks/', views.tasks, name='tasks'),
-    path('estudiante/', views.Estudiante),
+    path('estudiante/', views.Estudiante,name='estudiante'),
     path('usuario/', views.usuario,name='usuario'),
     path('usuario/update/<str:N_Identificacion>/', views.updateUsuario,name='usuarioupdate'),
     path('usuario/eliminar/<str:N_Identificacion>/', views.deleteUser),

@@ -75,17 +75,17 @@
 
         <div class="col text-end">
 
-          <a class="me-1" href="/usuario/update/{{usuario.N_Identificacion}}/" title="Actualizar">
+          <a class="me-1" href="/usuario/update/{{usuario.id}}/" title="Actualizar">
             <img class="bi me-1 bg" src="https://cdn-icons-png.flaticon.com/512/2356/2356780.png" class="me-2"
               height="18px" width="18px" alt=""></a>
     
 
-          <a class="me-1" href="" data-bs-toggle="modal" title="Asignar rol" data-user={{usuario.N_Identificacion}} onclick="btnAsignar(this),resetForms()" data-bs-target="#exampleModalAsiganacion" >
+          <a class="me-1" href="" data-bs-toggle="modal" title="Asignar rol" data-user={{usuario.id}} onclick="btnAsignar(this),resetForms()" data-bs-target="#exampleModalAsiganacion" >
             <img class="bi me-1 bg" src="https://cdn-icons-png.flaticon.com/512/6208/6208458.png" class="me-2"
               height="18px" width="18px" alt=""></a>
 
 
-          <a data-bs-toggle="modal" data-bs-target="#exampleModal1" title="Eliminar" class="me-1  text-black" id="delUser" onclick="del(this)" href="/usuario/eliminar/{{usuario.N_Identificacion}}/">
+          <a data-bs-toggle="modal" data-bs-target="#exampleModal1" title="Eliminar" class="me-1  text-black" id="delUser" onclick="del(this)" href="/usuario/eliminar/{{usuario.id}}/">
             <svg class="bi me-1" width="18px" height="18px">
               <use xlink:href="#delete" />
             </svg>
@@ -638,6 +638,7 @@
   
   function btnAsignar(e){
     $inputNident = document.getElementById('selectUsuHidden')
+    alert(e.getAttribute('data-user'))
     $inputNident.value  = e.getAttribute('data-user')
     console.log('valor option', $inputNident.value)
   }
@@ -659,6 +660,26 @@
     d.getElementById('formProfesor').classList.add('d-none')
     d.getElementById('formEstudiante').classList.add('d-none')
   }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 //con el codgio del selst dinamico descargado
   // document.querySelectorAll('input').forEach(function(input){

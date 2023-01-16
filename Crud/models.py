@@ -1,3 +1,4 @@
+from sqlite3 import IntegrityError
 from django.forms import TextInput
 from django.db import models
 from django import forms
@@ -55,7 +56,7 @@ class usuarios(models.Model):
     Fecha_Nac        = models.DateField(null=False)
     Telf_Celular     = models.CharField(max_length=15,null=False)
     Usu_Django       = models.CharField(max_length=50,null=False)
-    N_Identificacion = models.CharField(max_length=13, primary_key=True, null=False)
+    N_Identificacion = models.CharField(max_length=13, null=False)
     T_Identificacion = models.ForeignKey(tpi,   on_delete=models.CASCADE, null=False ) 
     Pais             = models.ForeignKey(pais,  on_delete=models.CASCADE, null=False )
     Provincia        = models.ForeignKey(provincia,  on_delete=models.CASCADE, null=False )
@@ -89,12 +90,9 @@ class alumnos(models.Model):
 # formularios
 # widget=forms.Select(attrs={'disabled': 'disabled'})
 class alumnosForm(forms.ModelForm):
-    #usua       = forms.IntegerField(    label='usua')
-    usua       =  forms.IntegerField( label='usua')
-    # usua         = forms.ModelChoiceField(queryset=usuarios.objects.all(),   label='usua')
-    # usua = forms.ChoiceField(choices=[(item.pk, item.usua) for item in alumnos.objects.all()])
+    usua       =  forms.IntegerField( label='usua')  
     Nom_carr     =  forms.ModelChoiceField(queryset=carrera.objects.all(),      required=True ,empty_label="Seleccione una Carrera", label='Carrera', error_messages={'required': 'Selecciona el tipo de carrera que pertenece.','required': 'Este campo es requerido'}   ,       )
-    Fecha_Inici  = forms.DateField(                                             required=True , label="Fecha de inicio",error_messages={'invalid': 'Ingrese una fecha válida.','required':'El campo es requerido'})
+    Fecha_Inici  = forms.DateField(widget=forms.TextInput(attrs={'type': 'date'})  ,                                          required=True , label="Fecha de inicio",error_messages={'invalid': 'Ingrese una fecha válida.','required':'El campo es requerido'})
      
     class Meta:
         model = alumnos
@@ -109,7 +107,6 @@ class usuariosForm(forms.ModelForm):
   Telf_Celular     = forms.CharField(max_length=15,                           label='Telefono Celular',required=True ,validators=[RegexValidator(r'^0\d{9}$','Comprube el numero por favor'),], error_messages={'required': 'Este campo es requerido'})
   Usu_Django       = forms.CharField(max_length=50,                           label='Nombre de Usuario',required=True ,validators=[RegexValidator(r'^[a-zA-Z0-9]*$','No debe tener espacios'),], error_messages={'required': 'Este campo es requerido'})
   N_Identificacion = forms.CharField(max_length=13,                           label='Numero de Identificacion',required=True ,error_messages={'invalid': 'Compruebe su identificacion.','required': 'Este campo es requerido'},validators=[RegexValidator(r'^0[\d]{9,12}$','Comprube el numero por favor')] )
-#   N_Identificacion = forms.CharField(max_length=13,                           label='Numero de Identificacion',error_messages={'invalid': 'Compruebe su identificacion.'},validators=[RegexValidator(r'^0[\d]{9,12}$','Comprube el numero por favor')] )
   T_Identificacion = forms.ModelChoiceField(queryset=tpi.objects.all(),       label='Tipo de Identificacion',required=True ,error_messages={'required': 'Selecciona el tipo de identificaion.',},empty_label="Tipo de identificacion" ) 
   Pais             = forms.ModelChoiceField(queryset=pais.objects.all(),      required=True ,empty_label="Seleccione el País",  error_messages={'required': 'Selecciona el tipo de identificaion.','required': 'Este campo es requerido'}   ,       )    
   Provincia        = forms.ModelChoiceField(queryset=provincia.objects.none(), required=True ,empty_label="Seleccione la Provincia",error_messages={'required': 'Compruebe su identificaion.','required': 'Este campo es requerido'},       )
@@ -125,7 +122,6 @@ class usuariosForm(forms.ModelForm):
     tpi = cleaned_data.get("T_Identificacion")
     numero_tpi = cleaned_data.get("N_Identificacion")
     
-    #funciona valida que no se repita la pk
     # if usuarios.objects.filter(N_Identificacion=numero_tpi).exists():
     #     self.add_error('N_Identificacion', 'El numero de identificacion ya ha sido registrado.')
 
@@ -135,6 +131,7 @@ class usuariosForm(forms.ModelForm):
             self.add_error("N_Identificacion", "Su Ruc debe tener 13 dígitos.")
         elif tpi.id != 1 and len(numero_tpi) != 10:
             self.add_error("N_Identificacion", "Su identificacion debe tener 10 dígitos.")
+    #funciona valida que no se repita la pk para el update  me da problemas porque lo valida
 
     # if self.instance:
     #  self.fields.pop('N_Identificacion')
