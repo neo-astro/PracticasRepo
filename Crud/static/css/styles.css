@@ -238,6 +238,9 @@
   border-color: none;
 }
 
+.w150{
+  min-width: 150px !important;
+}
 
 .alertSuccess{
   margin-top: 4px;

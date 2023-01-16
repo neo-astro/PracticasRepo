@@ -3,7 +3,7 @@ import json
 from django.shortcuts import HttpResponse, redirect, render,get_object_or_404
 from django.forms import modelform_factory
 
-from Crud.models import profesoresForm, tpi, usuarios, usuariosForm,provincia,ciudad,alumnosForm,alumnos,carrera
+from Crud.models import profesoresForm, tpi, usuarios, usuariosForm,provincia,ciudad,alumnosForm,alumnos,carrera,profesores,profesoresForm
 
 # from Crud.models import  usuarios,tpi
 
@@ -33,6 +33,24 @@ def Estudiante(request):
 
   return render(request, '_estudiante.html',{
     'estudiantes': listaEstudiantes,
+    'msmNoAsignado':msmNoAsignado,
+    'msmUpdate':msmUpdate
+    })
+
+def profesor(request):
+  listaProfesores = profesores.objects.select_related('usup').all()
+
+  msmNoAsignado = request.session.get('msmNoAsignado')
+  if request.session.get('msmNoAsignado'):
+    del request.session['msmNoAsignado']
+
+  msmUpdate = request.session.get('msmUpdate')
+  if request.session.get('msmUpdate'):
+    del request.session['msmUpdate']
+
+
+  return render(request, '_profesor.html',{
+    'estudiantes': listaProfesores,
     'msmNoAsignado':msmNoAsignado,
     'msmUpdate':msmUpdate
     })
@@ -69,7 +87,10 @@ def usuario(request):
       provinciaData = provincia.objects.get(pk = dataprovincia)
       formUsuario.fields['Provincia'].queryset = provincia.objects.filter(pk=provinciaData.pk)
 
-    # ci = request.POST.get('N_Identidad')
+    #limpiar datos
+
+
+    #validar ci
     if usuarios.objects.filter(N_Identificacion=request.POST.get('N_Identificacion')).exists():
       formUsuario.add_error('N_Identificacion', 'El numero de identificacion ya ha sido registrado.')
       error = "error"
@@ -192,6 +213,7 @@ def usuario(request):
 
 
 
+
 def updateUsuario(request, N_Identificacion):
   if request.method == 'POST':
 
@@ -202,9 +224,6 @@ def updateUsuario(request, N_Identificacion):
     form.fields['Ciudad'].queryset = ciudad.objects.filter(pk=ciudadData.pk)
     form.fields['Provincia'].queryset = provincia.objects.filter(pk=provinciaData.pk)
     
-
-
-
     if form.is_valid():
       form.save()
       print('se ACTUALIZO')
@@ -260,15 +279,16 @@ def updateEstudiante(request, id):
     # Estudiante = alumnos.objects.get(pk=id)
     # form = alumnosForm(request.POST or None, instance=Estudiante)
 
+    Estudiante = alumnos.objects.filter( pk = id).first()    
+    form = alumnosForm(request.POST or None, instance=Estudiante)
 
 
-
-    form = alumnosForm(request.POST)
-    Estudiante = alumnos.objects.get( pk = id)    
-    dataCarrera =  request.POST.get('Nom_carr') 
-    if dataCarrera:
-      carreraNombre = carrera.objects.get(pk=request.POST.get('Nom_carr'))
-      form.fields['Nom_carr'].queryset = carrera.objects.filter(pk=carreraNombre.pk)
+    # form = alumnosForm(request.POST)
+    # Estudiante = alumnos.objects.filter( pk = id).first()    
+    # dataCarrera =  request.POST.get('Nom_carr') 
+    # if dataCarrera:
+    #   carreraNombre = carrera.objects.get(pk=request.POST.get('Nom_carr'))
+    #   form.fields['Nom_carr'].queryset = carrera.objects.filter(pk=carreraNombre.pk)
         
     if form.is_valid():
       form.save()
@@ -303,7 +323,6 @@ def deleteEstudiante(request, id):
 
 
 
-  
 def asignarEstudiante(request):
   if request.method == 'POST':
     form = alumnosForm(request.POST)
@@ -314,10 +333,12 @@ def asignarEstudiante(request):
       form.fields['Nom_carr'].queryset = carrera.objects.filter(pk=carreraNombre.pk)
     
     if form.is_valid():
+      print('siiiiiiiiiiiii')
       alumnos.objects.create(usua = usuario, Nom_carr=carreraNombre, Fecha_Inici=request.POST.get('Fecha_Inici', None))
       request.session['msmAsignado'] = 'Usuario asignado con exito'
       return redirect('usuario')
     else:
+      print('noooooooooooo')
       request.session['msmNoAsignado'] = 'Datos invalidos intente nuevamente'
       return redirect('usuario')
 
@@ -326,6 +347,21 @@ def asignarEstudiante(request):
   return render(request, '_estudiante.html')
   # return render(request, 'index.html')
   
+
   
-  
-  
+def asignarProfesor(request):
+  if request.method == 'POST':
+    form = profesoresForm(request.POST)
+    usuario = profesores.objects.get( pk = request.POST.get('usup'))    
+    if form.is_valid():
+      print('valido')
+      profesores.objects.create(usup = usuario, Estado =request.POST.get('Estado'), Fecha_Inic=request.POST.get('Fecha_Inici', None))
+      request.session['msmAsignado'] = 'Usuario asignado con exito'
+      return redirect('profesor')
+    else:
+      print('no valido')
+      request.session['msmNoAsignado'] = 'Datos invalidos intente nuevamente'
+      return redirect('profesor')
+    #return HttpResponse('Hola')
+  return render(request, '_profesor.html')
+  # return render(request, 'index.html')

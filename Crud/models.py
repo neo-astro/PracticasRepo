@@ -30,7 +30,7 @@ class pais(models.Model):
         return fila02
 
 class provincia(models.Model):
-    Nompai = models.ForeignKey(pais, on_delete=models.SET_NULL,null=True) 
+    Nompai = models.ForeignKey(pais,on_delete=models.CASCADE,null=True) 
     Nomprov = models.CharField(max_length=100,primary_key=True)   
 
 
@@ -40,7 +40,7 @@ class provincia(models.Model):
 
 
 class ciudad(models.Model):
-    Nomprov = models.ForeignKey(provincia, on_delete=models.SET_NULL,null=True)
+    Nomprov = models.ForeignKey(provincia, on_delete=models.CASCADE,null=True)
     Nomcant = models.CharField(max_length=50, primary_key=True)
 
     def __str__(self):
@@ -69,7 +69,7 @@ class usuarios(models.Model):
 
 
 class profesores(models.Model):
-    usup = models.ForeignKey(usuarios,  on_delete=models.SET_NULL, null=True,blank=True,error_messages={'required': 'Selecione al estudiante'}) 
+    usup = models.ForeignKey(usuarios,  on_delete=models.CASCADE, null=True,blank=True,error_messages={'required': 'Selecione al estudiante'}) 
     Fecha_Inic = models.DateField(blank=True, error_messages={'invalid': 'Ingrese una fecha válida.'})
     Estado = models.BooleanField(default=False)
 
@@ -83,7 +83,7 @@ class profesoresForm(forms.ModelForm):
 
 
 class alumnos(models.Model):
-    usua = models.ForeignKey(usuarios,  on_delete=models.SET_NULL, null=True,blank=True,error_messages={'required': 'Selecione al estudiante'})
+    usua = models.ForeignKey(usuarios,  on_delete=models.CASCADE, null=True,blank=True,error_messages={'required': 'Selecione al estudiante'})
     Nom_carr = models.ForeignKey(carrera,  on_delete=models.SET_NULL, null=True,blank=True,error_messages={'required':'Seleciona la carrera'})
     Fecha_Inici = models.DateField(blank=True, error_messages={'invalid': 'Ingrese una fecha válida.'})
 
@@ -133,27 +133,27 @@ class usuariosForm(forms.ModelForm):
             self.add_error("N_Identificacion", "Su identificacion debe tener 10 dígitos.")
 
 
+#me da error al mandar mal y una pk q ya existia y los datos, luego de ingresar todo bien le vuelve a mostrar el modal con ci ya repedita 
+#   def clean_Nombre(self):
+#     nombre = self.cleaned_data['Nombre']
+#     nombre = nombre.strip()
+#     return nombre
 
-  def clean_Nombre(self):
-    nombre = self.cleaned_data['Nombre']
-    nombre = nombre.strip()
-    return nombre
+#   def clean_Apellido_P(self):
+#     data = self.cleaned_data['Apellido_P']
+#     data = data.strip()
+#     palabra = data.split()
+#     if len(palabra) != 1:
+#         raise forms.ValidationError("Ingrese su Apellido paterno")
+#     return data
 
-  def clean_Apellido_P(self):
-    data = self.cleaned_data['Apellido_P']
-    data = data.strip()
-    palabra = data.split()
-    if len(palabra) != 1:
-        raise forms.ValidationError("Ingrese su Apellido paterno")
-    return data
-
-  def clean_Apellido_M(self):
-    data = self.cleaned_data['Apellido_M']
-    data = data.strip()
-    palabra = data.split()
-    if len(palabra) != 1:
-        raise forms.ValidationError("Ingrese su Apellido materno")
-    return data
+#   def clean_Apellido_M(self):
+#     data = self.cleaned_data['Apellido_M']
+#     data = data.strip()
+#     palabra = data.split()
+#     if len(palabra) != 1:
+#         raise forms.ValidationError("Ingrese su Apellido materno")
+#     return data
 
 
 
