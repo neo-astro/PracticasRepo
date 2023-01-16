@@ -44,11 +44,12 @@ def ApiCiudad(reques,nombre_provincia):
 def usuario(request):
   if request.method == 'POST':
     formUsuario = usuariosForm(request.POST)
-    
+
     ciudadData = ciudad.objects.get(pk = request.POST.get('Ciudad'))
     provinciaData = provincia.objects.get(pk = request.POST.get('Provincia'))
     formUsuario.fields['Ciudad'].queryset = ciudad.objects.filter(pk=ciudadData.pk)
     formUsuario.fields['Provincia'].queryset = provincia.objects.filter(pk=provinciaData.pk)
+
     # ci = request.POST.get('N_Identidad')
     if usuarios.objects.filter(N_Identificacion=request.POST.get('N_Identificacion')).exists():
       formUsuario.add_error('N_Identificacion', 'El numero de identificacion ya ha sido registrado.')
@@ -138,13 +139,15 @@ def usuario(request):
   msmUpdate = request.session.get('msmUpdate')
   if request.session.get('msmUpdate'):
       del request.session['msmUpdate']
-
+  msmDelete = request.session.get('msmDelete')
+  if request.session.get('msmDelete'):
+    del request.session['msmDelete']
 
   form = usuariosForm()
   formProfesor = profesoresForm()
   formEstudiante = alumnosForm()
   listaUsuarios = usuarios.objects.all()
-  return render(request, '_usuario.html',{'form':form,'usuarios':listaUsuarios,'formEstudiante':formEstudiante,'formProfesor':  formProfesor,'msmUpdate':msmUpdate})
+  return render(request, '_usuario.html',{'form':form,'usuarios':listaUsuarios,'formEstudiante':formEstudiante,'formProfesor':  formProfesor,'msmUpdate':msmUpdate, 'msmDelete':msmDelete})
 
 
 
@@ -227,6 +230,7 @@ def updateUsuario(request, N_Identificacion):
 def deleteUser(request, N_Identificacion):
   usuario = usuarios.objects.get(pk=N_Identificacion)
   usuario.delete()
+  request.session['msmDelete'] = 'Usuario Eliminado'
   return redirect('usuario')
 
 

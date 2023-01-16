@@ -100,9 +100,9 @@ class alumnosForm(forms.ModelForm):
 
 
 class usuariosForm(forms.ModelForm):
-  Nombre           = forms.CharField(max_length=50,                           label='Nombre',required=True ,validators=[RegexValidator(r'^[a-zA-Z]*$','Solo se permiten letras en este campo.'),MinLengthValidator(3,'Minimo 3 letras')],  error_messages={'required': 'Este campo es requerido'})
-  Apellido_P       = forms.CharField(max_length=50,                           label='Apellido Paterno',required=True ,validators=[RegexValidator(r'^[a-zA-Z]*$','Solo se permiten letras en este campo.'),MinLengthValidator(3,'Minimo 3 letras')],  error_messages={'required': 'Este campo es requerido'})
-  Apellido_M       = forms.CharField(max_length=50,                           label='Apellido Materno',required=True ,validators=[RegexValidator(r'^[a-zA-Z]*$','Solo se permiten letras en este campo.'),MinLengthValidator(3,'Minimo 3 letras')],  error_messages={'required': 'Este campo es requerido'})
+  Nombre           = forms.CharField(max_length=50,                           label='Nombre',required=True ,validators=[RegexValidator(r'^[a-zA-Z\s]*$','Solo se permiten letras en este campo.'),MinLengthValidator(3,'Minimo 3 letras')],  error_messages={'required': 'Este campo es requerido'})
+  Apellido_P       = forms.CharField(max_length=50,                           label='Apellido Paterno',required=True ,validators=[RegexValidator(r'^[a-zA-Z\s]*$','Solo se permiten letras en este campo.'),MinLengthValidator(3,'Minimo 3 letras')],  error_messages={'required': 'Este campo es requerido'})
+  Apellido_M       = forms.CharField(max_length=50,                           label='Apellido Materno',required=True ,validators=[RegexValidator(r'^[a-zA-Z\s]*$','Solo se permiten letras en este campo.'),MinLengthValidator(3,'Minimo 3 letras')],  error_messages={'required': 'Este campo es requerido'})
   Fecha_Nac        = forms.DateField(widget=forms.TextInput(attrs={'type': 'date'}),                                         label='Fecha de nacimiento',required=True ,error_messages={'invalid': 'Ingrese una fecha válida.','required':'El campo es requerido'})
   Telf_Celular     = forms.CharField(max_length=15,                           label='Telefono Celular',required=True ,validators=[RegexValidator(r'^0\d{9}$','Comprube el numero por favor'),], error_messages={'required': 'Este campo es requerido'})
   Usu_Django       = forms.CharField(max_length=50,                           label='Nombre de Usuario',required=True ,validators=[RegexValidator(r'^[a-zA-Z0-9]*$','No debe tener espacios'),], error_messages={'required': 'Este campo es requerido'})
@@ -131,6 +131,32 @@ class usuariosForm(forms.ModelForm):
             self.add_error("N_Identificacion", "Su Ruc debe tener 13 dígitos.")
         elif tpi.id != 1 and len(numero_tpi) != 10:
             self.add_error("N_Identificacion", "Su identificacion debe tener 10 dígitos.")
+
+
+
+  def clean_Nombre(self):
+    nombre = self.cleaned_data['Nombre']
+    nombre = nombre.strip()
+    return nombre
+
+  def clean_Apellido_P(self):
+    data = self.cleaned_data['Apellido_P']
+    data = data.strip()
+    palabra = data.split()
+    if len(palabra) != 1:
+        raise forms.ValidationError("Ingrese su Apellido paterno")
+    return data
+
+  def clean_Apellido_M(self):
+    data = self.cleaned_data['Apellido_M']
+    data = data.strip()
+    palabra = data.split()
+    if len(palabra) != 1:
+        raise forms.ValidationError("Ingrese su Apellido materno")
+    return data
+
+
+
     #funciona valida que no se repita la pk para el update  me da problemas porque lo valida
 
     # if self.instance:

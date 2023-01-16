@@ -779,5 +779,19 @@
 
 
 
+{% if msmDelete %}
+<div id="alertSuccess" class="alertSuccess  w-25 rounded text-center alert alert-danger alert-dismissible fade show" role="alert">
+     {{ msmDelete }}
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+  </div>
+  <script type="text/javascript">
+    $alert = document.getElementById("alertSuccess")
+    setTimeout( ()=>{
+      $alert.parentNode.removeChild($alert)
+    }, 3000) 
+  </script>  
+{% endif %}
+
+
 {% endblock %}
 
