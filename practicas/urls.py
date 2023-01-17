@@ -24,6 +24,8 @@ urlpatterns = [
     path('provincia/<str:nombre_pais>/', views.ApiProvincia),
     path('ciudad/<str:nombre_provincia>/', views.ApiCiudad),
     path('asignarEstudiante/', views.asignarEstudiante),
-    path('asignarProfesor/', views.asignarProfesor)
+    path('asignarProfesor/', views.asignarProfesor),
+
+
 
 ]

@@ -1,16 +1,16 @@
-from audioop import reverse
 import json
+from django.contrib.auth import login, authenticate
 from django.shortcuts import HttpResponse, redirect, render,get_object_or_404
-from django.forms import modelform_factory
+#from django.forms import modelform_factory
 
 from Crud.models import profesoresForm, tpi, usuarios, usuariosForm,provincia,ciudad,alumnosForm,alumnos,carrera,profesores,profesoresForm
 
 # from Crud.models import  usuarios,tpi
 
 # Create your views here.
+
 def home (request):
   return render(request, 'index.html')
-
 def tasks(request):
   return render(request, 'tasks.html')
 # def Estudiante(request):
@@ -411,3 +411,7 @@ def asignarProfesor(request):
     #return HttpResponse('Hola')
   return render(request, '_profesor.html')
   # return render(request, 'index.html')
+
+
+
+
