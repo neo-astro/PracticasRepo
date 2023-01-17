@@ -21,7 +21,7 @@
     <svg class="bi mt-1 me-2" width="40" height="40">
       <use xlink:href="#userPerfil" />
     </svg>
-    <p class="fs-5 mb-2 fw-semibold">Lista de Usuarios</p>
+    <p class="fs-5 mb-2 fw-semibold">Lista de Profesores</p>
   </div>
 
 
@@ -29,12 +29,21 @@
   <div class="list-group list-group-flush border-bottom  scrollarea">
 
     <!-- elementos usuario -->
-    {% for usuario in usuarios %}
+    {% for profesor in profesores %}
     <div href="#" class="list-group-item list-group-item-action py-3 rounded-bottom lh-tight" aria-current="true">
 
-      <div class="d-flex w-100 align-items-center justify-content-between">
-        <strong class="mb-1">{{usuario.Nombre}} {{usuario.Apellido_P}} {{usuario.Apellido_M}}</strong>
-        <!-- <small class="fw-bold"> Software</small> -->
+      <div class="d-flex w-100 align-items-center  justify-content-between">
+        <strong class="mb-1"style="max-width: 400px" >{{profesor.usup.Nombre}} {{profesor.usup.Apellido_P}} {{profesor.usup.Apellido_M}}</strong>
+     
+        {% if profesor.Estado == False %}
+        <small class="fw-bold text-center d-flex justify-content-between " style="width: 70px"> 
+          Estado<div class="btn-status-danger m-auto"></div>
+        </small>
+        {% else %}
+        <small class="fw-bold text-center d-flex justify-content-between" style="width: 70px"> 
+          Estado<div class="btn-status-success m-auto"></div>
+        </small>
+        {% endif %}
       </div>
 
       <div class="row">
@@ -51,7 +60,7 @@
               <div class="d-flex">
                 <img width="18px" height="18px" class="me-2" src="https://cdn-icons-png.flaticon.com/512/126/126509.png"
                   alt="">
-                <div>{{usuario.Telf_Celular}}</div>
+                <div>{{profesor.usup.Telf_Celular}}</div>
               </div>
             </div>
 
@@ -60,11 +69,11 @@
                 alt="">
               <!-- <svg class="bi me-2" width="18" height="18"><use xlink:href="#location"/></svg> -->
               <div class="d-flex" style="width: 300px">
-                <div>{{usuario.Pais}}</div>
+                <div>{{profesor.usup.Pais}}</div>
                 /
-                <div>{{usuario.Provincia}}</div>
+                <div>{{profesor.usup.Provincia}}</div>
                 /
-                <div>{{usuario.Ciudad}}</div>
+                <div>{{profesor.usup.Ciudad}}</div>
               </div>
 
             </div>
@@ -75,17 +84,12 @@
 
         <div class="col text-end">
 
-          <a class="me-1" href="" title="Actualizar">
+          <a class="me-1"  href="/profesor/update/{{profesor.id}}/" href="" title="Actualizar">
             <img class="bi me-1 bg" src="https://cdn-icons-png.flaticon.com/512/2356/2356780.png" class="me-2"
               height="18px" width="18px" alt=""></a>
     
 
-          <a class="me-1" href="" data-bs-toggle="modal" title="Asignar rol" data-user={{usuario.N_Identificacion}} onclick="btnAsignarEst(this)" data-bs-target="#exampleModalAsiganacion" >
-            <img class="bi me-1 bg" src="https://cdn-icons-png.flaticon.com/512/6208/6208458.png" class="me-2"
-              height="18px" width="18px" alt=""></a>
-
-
-          <a data-bs-toggle="modal" data-bs-target="#exampleModal1" title="Eliminar" class="me-1  text-black" id="delUser" onclick="del(this)" href="/usuario/eliminar/{{usuario.N_Identificacion}}/">
+          <a data-bs-toggle="modal" data-bs-target="#exampleModal1" title="Eliminar" class="me-1  text-black" id="delUser" onclick="del(this)" href="/profesor/eliminar/{{profesor.id}}/">
             <svg class="bi me-1" width="18px" height="18px">
               <use xlink:href="#delete" />
             </svg>
@@ -126,14 +130,13 @@
   <div class="d-flex flex-column  h-100 ">
 
 
-    <button title="Nuevo Usuario" id="actModal" data-bs-toggle="modal" data-bs-target="#exampleModal"
-      class="fw-bold d-flex mt-3   btn-circle  mx-auto " style="width: 70px ; height: 70px;">
 
-      <div class="d-flex  justify-content-center flex-column w-100  h-100">
-        <div>+</div>
-      </div>
-
-    </button>
+      <a  class="mt-3  text-center text-decoration-none  btn-circle  mx-auto" href="/" style="width: 70px ; height: 70px;">
+        <img  src="https://cdn-icons-png.flaticon.com/512/4939/4939785.png" width="40px" height="40px" alt="">
+      </a>
+  
+  
+   
 
 
 
@@ -446,86 +449,6 @@
 
 
 
-<div class="modal " id="exampleModalAsiganacion" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog"  >
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-
-
-      <div class="row text-center p-2">
-       
-
-       
-
-        <a class="col m-2 btn text-hover" data-bs-toggle="modal" data-target="#formularioEstudiante">
-          <img src="https://cdn-icons-png.flaticon.com/512/2784/2784403.png" class="me-2 "  height="80px" width="80px" alt="">
-          <p class="mx-auto fw-bold">Estudiante</p>
-        </a>
-
-     
-        
-        <div class="col fw-semibold">
-            Asignar nuevo 
-        </div>
-
-
-
-        <a class="m-2 col p-2 btn text-hover"  data-bs-toggle="modal"  data-target="#formularioProfesor">
-          <img src="https://cdn-icons-png.flaticon.com/512/3429/3429433.png"  class="me-2"  height="80px" width="80px" alt="">
-          <p class="mx-auto fw-bold">Profesor</p>
-        </a>
-      </div>
-
-
-      <!-- formulario estudiante     -->
-      <form action="http://127.0.0.1:8000/asignarEstudiante/"  class="" method="POST" >
-
-        {% csrf_token %}
-        <select  class="invisible col" name="usua" id="id_usua">
-          <option value="" id="selectUsuHidden" selected>usuario selecionado</option>
-        </select>
-        <div class="row">
-
-          <div class="col-12 mb-2">
-            <div class="row  {% if formEstudiante.Nom_carr.errors %}has-error{% endif %}" >
-              <labe class="control-label col-4 text-center ">{{formEstudiante.Nom_carr.label_tag }}</labe>
-              {{ formEstudiante.Nom_carr|add_class:"form-control w-50 col-4" }}
-              <span class="myerror">{{ formEstudiante.Nom_carr.errors }}</span>
-            </div>
-          </div>
-
-          <div class="col-12 mb-2">
-            <div class="row {% if formEstudiante.Fecha_Inici.errors %}has-error{% endif %}" >
-              <labe class="col-4 control-label text-center">{{formEstudiante.Fecha_Inici.label_tag }}</labe>
-              <input type="date" id="Fecha_Nac" value="{{ formEstudiante.Fecha_Inici.value }}" name="Fecha_Inici" class="form-control col-4 w-50" placeholder="dd/mm/aa">
-              <span class="myerror">{{ formEstudiante.Fecha_Inici.errors }}</span>
-            </div>  
-          </div>
-
-
-        </div>
-      
-
-        <div class="col-12 text-center ">
-          <input type="submit" class="btn btn-dark w-50 fw-bold" value="Enviar">
-        </div>
-        
-
-      
-      </form>
-
-
-
-
-    
-
-    </div>
-  </div>
-</div>
-
-
 
 
 
@@ -548,33 +471,7 @@
 <script type="text/javascript">
 
   var d = document
-  var select = document.getElementById('id_Pais');
-  var provincia = document.getElementById('id_Provincia')
-  var ciudad = document.getElementById('id_Ciudad')
-
-  // funciones
-  function CompleteDropdown(data,selectAllenar,campoName,nombreLabel){
-    selectAllenar.innerHTML = `<option value="" selected disabled>${nombreLabel}</option>`
-    data.forEach(function(e){
-
-      selectAllenar.innerHTML +=  `<option value="${e[campoName]}">${e[campoName]}</option>`
-    })
-  }
-  function ListenSelect(Objeto,ruta,selectAllenar,campoName,nombreLabel){
-    Objeto.addEventListener('change',
-    function(){
-      var selectedOption = this.options[Objeto.selectedIndex];
-      fetch(ruta + `${selectedOption.value}/`)
-      .then((response) => response.json())
-      .then((data) => CompleteDropdown(data,selectAllenar,campoName,nombreLabel));
-      // console.log(selectedOption.value + ': ' + selectedOption.text);
-
-    });
-  }
-
-  ListenSelect(select,'http://127.0.0.1:8000/provincia/',provincia,'Nomprov','Seleccione la Provincia')
-  ListenSelect(provincia,'http://127.0.0.1:8000/ciudad/',ciudad,'Nomcant','Seleccione la Ciudad')
-
+ 
     // Eliminamos la propiedad required de todos los campos de entrada
   d.querySelectorAll('input').forEach(function(input) {
   input.removeAttribute('required');
@@ -588,10 +485,6 @@
     document.getElementById('confirm').innerHTML = `<a  class="btn btn-danger" href='${e.href}'>Eliminar</a >`
   }
   
-  function btnAsignarEst(e){
-    $inputNident = document.getElementById('selectUsuHidden')
-    $inputNident  = e.getAttribute('data-user')
-  }
 
 
 
@@ -599,43 +492,32 @@
 
 
 
-
-{% if error %}
-<script type="text/javascript">
-  document.getElementById("actModal").click()
-  
-  const inputs = document.querySelectorAll("input");
-  const selects = document.querySelectorAll("select");
-  selects.forEach(select => {
-    select.addEventListener("change", function() {
-      // Elimina la clase que agrega el borde rojo
-      this.parentElement.classList.remove("has-error");
-      this.nextElementSibling.style.display= "none";
-    });
-  });
-  // Agrega un evento de "cambio" a cada uno de los campos de entrada
-  inputs.forEach(input => {
-    input.addEventListener("change", function() {
-      // Elimina la clase que agrega el borde rojo
-      this.parentElement.classList.remove("has-error");
-      this.nextElementSibling.style.display= "none";
-    });
-  });
-</script>  
-{% endif %}
-
-{% if success %}
-  <div id="alertSuccess" class="alertSuccess  w-25 rounded text-center alert alert-success alert-dismissible fade show" role="alert">
-    {{ success }}
+{% if msmNoAsignado %}
+<div id="alertSuccess" class="alertSuccess  w-25 rounded text-center alert alert-danger alert-dismissible fade show" role="alert">
+     {{ msmNoAsignado }}
     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
   </div>
   <script type="text/javascript">
     $alert = document.getElementById("alertSuccess")
     setTimeout( ()=>{
       $alert.parentNode.removeChild($alert)
-    }, 3000) 
+    }, 4000) 
   </script>  
 {% endif %}
+
+{% if msmUpdate %}
+  <div id="alertSuccess" class="alertSuccess  w-25 rounded text-center alert alert-success alert-dismissible fade show" role="alert">
+    {{ msmUpdate }}
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+  </div>
+  <script type="text/javascript">
+    $alert = document.getElementById("alertSuccess")
+    setTimeout( ()=>{
+      $alert.parentNode.removeChild($alert)
+    }, 4000) 
+  </script>  
+{% endif %}
+
 
 
 

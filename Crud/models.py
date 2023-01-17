@@ -74,13 +74,11 @@ class profesores(models.Model):
     Estado = models.BooleanField(default=False)
 
 class profesoresForm(forms.ModelForm):
-    usup = forms.IntegerField( label='usua') 
-    Fecha_Inic = models.DateField(blank=True, error_messages={'invalid': 'Ingrese una fecha válida.'})
-    Estado = models.BooleanField(default=False)
+    Fecha_Inic =forms.DateField(widget=forms.TextInput(attrs={'type': 'date'})  ,                                          required=True , label="Fecha de inicio",error_messages={'invalid': 'Ingrese una fecha válida.','required':'El campo es requerido'})
+    Estado = forms.BooleanField(required=False,widget=forms.CheckboxInput())
     class Meta:
         model =profesores
-        fields = ['usup','Fecha_Inic','Estado']
-
+        fields = ['Fecha_Inic','Estado']
 
 class alumnos(models.Model):
     usua = models.ForeignKey(usuarios,  on_delete=models.CASCADE, null=True,blank=True,error_messages={'required': 'Selecione al estudiante'})

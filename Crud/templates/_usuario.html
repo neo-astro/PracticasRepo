@@ -514,18 +514,16 @@
 
 <!-- formulario pro -->
 
-      <form action="http://127.0.0.1:8000/asignarProfesor/" class="d-none" id="formProfesor">
+      <form action="http://127.0.0.1:8000/asignarProfesor/" method="POST" class="d-none" id="formProfesor">
         {% csrf_token %}
-      
-      
-        <select  class="invisible" name="usua" id="id_usua">
-          <option value="" selected>usuario selecionado</option>
+        <select  class="invisible" name="usup" id="id_usup">
+          <option value="" id="selectUsuHiddenProfesor" selected>usuario selecionado</option>
         </select>
         
         <div class="row">
       
           <div class="col-12 mb-2">
-            <div class="row  {% if formEstudiante.Nom_carr.errors %}has-error{% endif %}" >
+            <div class="row  {% if formProfesor.Estado.errors %}has-error{% endif %}" >
               <labe class="control-label col-4 text-center ">{{formProfesor.Estado.label_tag }}</labe>
               {{ formProfesor.Estado|add_class:"rounded-circle w-50 col-4" }}
               <span class="myerror">{{ formProfesor.Estado.errors }}</span>
@@ -535,8 +533,8 @@
           <div class="col-12 mb-2">
             <div class="row {% if formProfesor.Fecha_Inici.errors %}has-error{% endif %}" >
               <labe class="col-4 control-label text-center">{{formProfesor.Fecha_Inic.label_tag }}</labe>
-              <input type="date" id="Fecha_Nac" value="{{ formProfesor.Fecha_Inic.value }}" name="Fecha_Inici" class="form-control col-4 w-50" placeholder="dd/mm/aa">
-              <span class="myerror">{{ formProfesor.Fecha_Inici.errors }}</span>
+              <input type="date" id="Fecha_Nac" value="{{ formProfesor.Fecha_Inic.value }}" name="Fecha_Inic" class="form-control col-4 w-50" placeholder="dd/mm/aa">
+              <span class="myerror">{{ formProfesor.Fecha_Inic.errors }}</span>
             </div>  
           </div>
       
@@ -552,13 +550,6 @@
 
       
       </form>
-    
-        <!-- {{formProfesor.Fecha_Inici}} 
-        {{formProfesor.Estado}}
-        <input type="submit" class="mx-auto btn btn-dark mt-2 w-50 fw-bold" value="Enviar">
-       -->
-      
-    
 
     </div>
   </div>
@@ -632,6 +623,9 @@
   function btnAsignar(e){
     $inputNident = document.getElementById('selectUsuHidden')
     $inputNident.value  = e.getAttribute('data-user')
+    $inputNidentProfesor = document.getElementById('selectUsuHiddenProfesor')
+    $inputNidentProfesor.value  = e.getAttribute('data-user')
+
     console.log('valor option', $inputNident.value)
   }
   
@@ -738,7 +732,7 @@
     $alert = document.getElementById("alertSuccess")
     setTimeout( ()=>{
       $alert.parentNode.removeChild($alert)
-    }, 3000) 
+    }, 4000) 
   </script>  
 {% endif %}
 
@@ -752,7 +746,7 @@
     $alert = document.getElementById("alertSuccess")
     setTimeout( ()=>{
       $alert.parentNode.removeChild($alert)
-    }, 3000) 
+    }, 4000) 
   </script>  
 {% endif %}
 
@@ -767,7 +761,7 @@
     $alert = document.getElementById("alertSuccess")
     setTimeout( ()=>{
       $alert.parentNode.removeChild($alert)
-    }, 3000) 
+    }, 4000) 
   </script>  
 {% endif %}
 
@@ -781,7 +775,7 @@
     $alert = document.getElementById("alertSuccess")
     setTimeout( ()=>{
       $alert.parentNode.removeChild($alert)
-    }, 3000) 
+    }, 4000) 
   </script>  
 {% endif %}
 
@@ -795,7 +789,7 @@
     $alert = document.getElementById("alertSuccess")
     setTimeout( ()=>{
       $alert.parentNode.removeChild($alert)
-    }, 3000) 
+    }, 4000) 
   </script>  
 {% endif %}
 
