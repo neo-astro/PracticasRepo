@@ -3,7 +3,7 @@ from django.contrib.auth import login, authenticate
 from django.shortcuts import HttpResponse, redirect, render,get_object_or_404
 #from django.forms import modelform_factory
 
-from Crud.models import profesoresForm, tpi, usuarios, usuariosForm,provincia,ciudad,alumnosForm,alumnos,carrera,profesores,profesoresForm
+from Crud.models import profesoresForm, tpi,detalle, usuarios,usuariosForm,provincia,ciudad,alumnosForm,alumnos,carrera,profesores,profesoresForm,detalleForm
 
 # from Crud.models import  usuarios,tpi
 
@@ -103,7 +103,7 @@ def usuario(request):
       formUsuario.fields['Provincia'].initial =request.POST.get('Provincia')
       formUsuario.fields['Ciudad'].initial = request.POST.get('Ciudad')
 
-
+      form = usuariosForm()
       formProfesor = profesoresForm()
       formEstudiante = alumnosForm()
       listaUsuarios = usuarios.objects.all()
@@ -337,8 +337,6 @@ def asignarEstudiante(request):
   return render(request, '_estudiante.html')
   # return render(request, 'index.html')
   
-
-
 def profesor(request):
   listaProfesores = profesores.objects.select_related('usup').all()
 
@@ -356,7 +354,6 @@ def profesor(request):
     'msmNoAsignado':msmNoAsignado,
     'msmUpdate':msmUpdate
     })
-
 
 def deleteProfesor(request,id):
   print(id, 'eliminarrrrrrrrrrrrrrrr')
@@ -389,10 +386,7 @@ def updateProfesor(request,id):
   # formProfesor.fields['Estado'].initial = profesor.Estado
 
   return render(request, '_profesorUpdate.html',{'form': formProfesor,'id':profesor.id})    
-    
-
-
-  
+     
 def asignarProfesor(request):
   if request.method == 'POST':
     form = profesoresForm(request.POST)
@@ -415,3 +409,46 @@ def asignarProfesor(request):
 
 
 
+def horario(request, id):
+  detalle = [{'fechaIncio':'2020/12/12','fechaFin':'2023/01/01','modalidad':'presencial','materia': 'Matemáticas', 'profesor': 'Juan Pérez', 'hora': '7:00 am', 'dia': 'Martes'},
+             {'fechaIncio':'2020/12/12','fechaFin':'2023/01/01','modalidad':'presencial','materia': 'Física', 'profesor': 'Maria Rodriguez', 'hora': '11:00 am', 'dia': 'Martes'},
+             {'fechaIncio':'2020/12/12','fechaFin':'2023/01/01','modalidad':'presencial','materia': 'Física', 'profesor': 'Maria Rodriguez', 'hora': '11:00 am', 'dia': 'Lunes'},
+             {'fechaIncio':'2020/12/12','fechaFin':'2023/01/01','modalidad':'presencial','materia': 'Química', 'profesor': 'Pedro González', 'hora': '9:00 am', 'dia': 'Lunes'},
+  ]
+  days = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes']
+  hours = ['7:00 am', '8:00 am', '9:00 am', '10:00 am', '11:00 am', '12:00 pm', '1:00 pm']
+
+  return render(request, '_horario.html', {'detalle': detalle, 'days': days, 'hours': hours} )
+
+
+
+
+def horarioAsignar(request):
+  if request.method == 'POST':
+    print(request.POST)
+    return HttpResponse('e')
+  form = detalleForm()
+  return render(request,'_horarioAsignar.html',{'form': form})
+
+
+
+def updateHorario(request,id):
+  if request.method == 'POST':
+    print('update Horario ',request.POST)
+    
+    detal = detalle.objects.filter( pk = id).first()    
+    form = detalleForm(request.POST or None, instance=detal)
+    if form.is_valid():
+      print('se actualizo horario')
+      form.save()
+      request.session['msmUpdate']= "Datos actualizados"
+      return redirect('usuario')
+    else:
+      request.session['msmNoAsignado'] = 'Datos invalidos intente nuevamente'
+      return redirect('usuario')
+  detal = get_object_or_404(detalle, pk=id) #devuelve la ci
+  print('la pk de detalle',detal.id)
+  form = detalleForm(instance = detal)
+  # formProfesor.fields['Estado'].initial = profesor.Estado
+
+  return render(request, '_profesorUpdate.html',{'form': detalleForm,'id':detal.id})    

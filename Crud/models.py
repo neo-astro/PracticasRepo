@@ -64,7 +64,7 @@ class usuarios(models.Model):
     
 
     def __str__(self):
-        fila1 = "Numero de Identificacion: " + self.N_Identificacion 
+        fila1 = self.Nombre + ' ' + self.Apellido_P
         return fila1
 
 
@@ -72,9 +72,13 @@ class profesores(models.Model):
     usup = models.ForeignKey(usuarios,  on_delete=models.CASCADE, null=True,blank=True,error_messages={'required': 'Selecione al estudiante'}) 
     Fecha_Inic = models.DateField(blank=True, error_messages={'invalid': 'Ingrese una fecha válida.'})
     Estado = models.BooleanField(default=False)
+    
+    def __str__(self):
+        fila06 = f'{self.usup.Nombre} {self.usup.Apellido_P}'
+        return fila06
 
 class profesoresForm(forms.ModelForm):
-    Fecha_Inic =forms.DateField(widget=forms.TextInput(attrs={'type': 'date'})  ,                                          required=True , label="Fecha de inicio",error_messages={'invalid': 'Ingrese una fecha válida.','required':'El campo es requerido'})
+    Fecha_Inic =forms.DateField(widget=forms.TextInput(attrs={'type': 'date'})  ,                                          required=True , label="Fecha inicio",error_messages={'invalid': 'Ingrese una fecha válida.','required':'El campo es requerido'})
     Estado = forms.BooleanField(required=False,widget=forms.CheckboxInput())
     class Meta:
         model =profesores
@@ -85,12 +89,16 @@ class alumnos(models.Model):
     Nom_carr = models.ForeignKey(carrera,  on_delete=models.SET_NULL, null=True,blank=True,error_messages={'required':'Seleciona la carrera'})
     Fecha_Inici = models.DateField(blank=True, error_messages={'invalid': 'Ingrese una fecha válida.'})
 
+    def __str__(self):
+        fila05 = f'{self.usua.Nombre} {self.usua.Apellido_P}'
+        return fila05
+
 # formularios
 # widget=forms.Select(attrs={'disabled': 'disabled'})
 class alumnosForm(forms.ModelForm):
     # usua       =  forms.IntegerField( label='usua')  #
     Nom_carr     =  forms.ModelChoiceField(queryset=carrera.objects.all(),      required=True ,empty_label="Seleccione una Carrera", label='Carrera', error_messages={'required': 'Selecciona el tipo de carrera que pertenece.','required': 'Este campo es requerido'}   ,       )
-    Fecha_Inici  = forms.DateField(widget=forms.TextInput(attrs={'type': 'date'})  ,                                          required=True , label="Fecha de inicio",error_messages={'invalid': 'Ingrese una fecha válida.','required':'El campo es requerido'})
+    Fecha_Inici  = forms.DateField(widget=forms.TextInput(attrs={'type': 'date'})  ,                                          required=True , label="Fecha inicio",error_messages={'invalid': 'Ingrese una fecha válida.','required':'El campo es requerido'})
      
     class Meta:
         model = alumnos
@@ -191,3 +199,78 @@ class usuariosForm(forms.ModelForm):
     #         self.add_error('N_Identificacion', 'Para el tipo de identificación Ruc, el número de identificación debe tener 13 dígitos.')
     #     elif t_identificacion and t_identificacion.codigo != 'Ruc' and len(n_identificacion) != 10:
     #         self.add_error('N_Identificacion', 'Para los demás tipos de identificación, el número de identificación debe tener 10 dígitos.')
+
+
+
+#nuevo req
+
+class horarios(models.Model):
+    Nomh = models.CharField(max_length=100)
+    
+    def __str__(self):
+        fila002 = self.Nomh
+        return fila002
+
+class materias(models.Model):
+    Nommt = models.CharField(max_length=50)
+    
+    def __str__(self):
+        fila003 =  self.Nommt
+        return fila003
+
+class modalidades(models.Model):
+    Nomm = models.CharField(max_length=50)
+    
+    def __str__(self):
+        fila001 = self.Nomm
+        return fila001
+
+
+
+class detalle(models.Model):
+    class Weekday(models.TextChoices):
+        lunes = "Lunes", "Lunes"
+        martes = "Martes", "Martes"
+        miercoles = "Miercoles", "Miercoles"
+        jueves = "Jueves", "Jueves"
+        viernes = "Viernes", "Viernes"
+        sabado = "Sabado", "Sabado"
+        domingo = "Domingo", "Domingo"        
+    Alumno = models.ForeignKey(alumnos, on_delete=models.CASCADE, null=False)
+    Profesor = models.ForeignKey(profesores, on_delete=models.CASCADE, null=False)
+    Materia =  models.ForeignKey(materias, on_delete=models.CASCADE, null=False)
+    Modalidad = models.ForeignKey(modalidades, on_delete=models.CASCADE, null=False)
+    Hora = models.TimeField( null=False)
+    Dia = models.CharField(max_length=10, choices=(("", "Seleccione el día"),) + tuple(Weekday.choices), null=False, error_messages={'required': 'Selecciona un dia.'}   , )
+    Fecha_Inicio = models.DateField(null=False)
+    Fecha_Fin = models.DateField(null=False)
+
+    def __str__(self):
+        fila1 = "Detalle del Usuario:  " + self.Dia
+        return fila1
+
+class detalleForm(forms.ModelForm):
+    Alumno = forms.ModelChoiceField(queryset=alumnos.objects.all(),      required=True ,empty_label="Elegir Estudiante", label='Alumno', error_messages={'required': 'Selecciona al Estudiante.','required': 'Este campo es requerido'}   ,       )
+    Profesor = forms.ModelChoiceField(queryset=profesores.objects.all(),      required=True ,empty_label="Elegir Profesor ", label='Profesor', error_messages={'required': 'Selecciona al Profesor.','required': 'Este campo es requerido'}   ,       )
+    Materia = forms.ModelChoiceField(queryset=materias.objects.all(),      required=True ,empty_label="Elegir Materia", label='Materia', error_messages={'required': 'Selecciona una Materia.','required': 'Este campo es requerido'}   ,       )
+    Modalidad = forms.ModelChoiceField(queryset=modalidades.objects.all(),  required=True, empty_label="Elegir Modalidad", label="Modalidad", error_messages={'required':'Seleccione una Modalidad','requerid': 'Este campo es requerido'}   ,  ) 
+    Hora = forms.TimeField(widget=forms.TextInput(attrs={'type': 'time'}),)
+    Fecha_Inicio = forms.DateField(widget=forms.TextInput(attrs={'type': 'date'})  ,                                          required=True , label="Empieza",error_messages={'invalid': 'Ingrese una fecha válida.','required':'El campo es requerido'})
+    Fecha_Fin = forms.DateField(widget=forms.TextInput(attrs={'type': 'date'})  ,                                          required=True , label="Termina",error_messages={'invalid': 'Ingrese una fecha válida.','required':'El campo es requerido'})
+    class Meta:
+        model = detalle
+        fields = ['Alumno', 'Profesor', 'Materia', 'Modalidad', 'Hora', 'Dia', 'Fecha_Inicio', 'Fecha_Fin']
+
+
+
+
+
+
+
+
+
+
+
+
+
+

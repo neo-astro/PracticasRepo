@@ -1,0 +1,331 @@
+{% extends "index.html" %}
+
+
+{% block contend %}
+
+{% load widget_tweaks %}
+<link rel="stylesheet" href="../static/css/styles.css">
+<link rel="stylesheet" href="../static/css/sidebar.css">
+
+
+
+
+
+
+
+<!-- contenido estudiante  -->
+<div class="d-flex flex-column align-items-stretch  bg-light" style="width: 750px;">
+
+
+  
+  <div style="background-color:#ff595e" class="container-fluid mx-auto text-center text-decoration-none text-light mb-1">
+    
+    <img src="https://cdn-icons-png.flaticon.com/512/6394/6394638.png" class="bi mt-1 me-2" width="50" height="50"
+      alt="">
+    <p class="fs-5 mb-2 fw-bold">Asignacion de Horario de Clases</p>
+  
+  </div>
+
+
+  <form id="formAsignar" 
+  style="border-radius: 12px;
+  background: #f0f0f0;
+  box-shadow:  9px 9px 18px #cecece,
+               -9px -9px 18px #ffffff;"
+  class="row m-3">
+    {% csrf_token %}
+    <div><br></div>
+
+    <div class="col-6 p-0">
+
+
+      <div class="form-group campform {% if form.Nombre.errors %}has-error{% endif %}" >
+        <div class="d-flex justify-content-evenly">
+          <labe class="control-label fw-semibold  ">{{form.Alumno.label_tag }}</labe>
+          {{ form.Alumno|add_class:"form-control p-0 text-center" }}
+        </div>
+      </div>
+
+      <div class="form-group campform {% if form.Materia.errors %}has-error{% endif %}" >
+        <div class="d-flex justify-content-evenly">
+          <labe class="control-label fw-semibold">{{form.Materia.label_tag }}</labe>
+          {{ form.Materia|add_class:"form-control p-0 text-center " }}
+        </div>
+      </div>
+
+      <div class="form-group campform {% if form.Modalidad.errors %}has-error{% endif %}" >
+        <div class="d-flex justify-content-evenly">
+          <labe class="control-label fw-semibold">{{form.Modalidad.label_tag }}</labe>
+          {{ form.Modalidad|add_class:"form-control p-0 text-center " }}
+        </div>
+      </div>
+
+      <div class="form-group campform {% if form.Profesor.errors %}has-error{% endif %}" >
+        <div class="d-flex justify-content-evenly">
+          <labe class="control-label fw-semibold ">{{form.Profesor.label_tag }}</labe>
+          {{ form.Profesor|add_class:"form-control p-0 text-center " }}
+        </div>
+      </div>
+
+    </div>
+
+    <div class="col-6 p-0">
+
+      <div class="form-group campform {% if form.Fecha_Inicio.errors %}has-error{% endif %}" >
+        <div class="d-flex justify-content-evenly">
+          <labe class="control-label fw-semibold">{{form.Fecha_Inicio.label_tag }}</labe>
+          {{ form.Fecha_Inicio|add_class:"form-control p-0 text-center " }}
+        </div>
+      </div>
+
+      <div class="form-group campform {% if form.Fecha_Fin.errors %}has-error{% endif %}" >
+        <div class="d-flex justify-content-evenly">
+          <labe class="control-label fw-semibold ">{{form.Fecha_Fin.label_tag }}</labe>
+          {{ form.Fecha_Fin|add_class:"form-control p-0 text-center " }}
+        </div>
+      </div>
+
+      
+      <div class="form-group campform {% if form.Dia.errors %}has-error{% endif %}" >
+        <div class="d-flex justify-content-evenly">
+          <labe class="control-label fw-semibold ">{{form.Dia.label_tag }}</labe>
+          {{ form.Dia|add_class:"form-control p-0 text-center " }}
+        </div>
+      </div>
+
+
+
+      
+      <div class="form-group campform {% if form.Hora.errors %}has-error{% endif %}" >
+        <div class="d-flex justify-content-evenly">
+          <labe class="control-label fw-semibold ">{{form.Hora.label_tag }}</labe>
+          {{ form.Hora|add_class:"form-control p-0 text-center " }}
+        </div>
+      </div>
+
+
+    </div>
+
+
+    <div class="col-12 text-center  ">
+      <button type="button"  onclick="add()" style="background-color:#ff595e"  class="btn mt-2 text-light  fw-bold">Agregar</button>
+    </div>
+    <div><br></div>
+  </form>
+
+
+
+
+  <form method="POST" id="form" action="http://127.0.0.1:8000/horarioAsignar/"  class="row"> 
+    {% csrf_token %}
+    <input type="hidden" id="usuarios" name="usuarios" value="1">
+
+    <table name="table" class="col-12 table table-info m-5" style="width: 700px !important">
+      <thead> 
+        <tr>
+          <th>Estudiante</th>
+          <th>Profesor</th>
+          <th>Materia</th>
+          <th>Modalidad</th>
+          <th>Hora</th>
+          <th>Dia</th>
+          <th>Incio</th>
+          <th>Fin</th>
+        </tr>
+
+      </thead>  
+      
+      <tbody id="tbody" >
+
+      </tbody>
+    </table>
+
+    <div><hr></div>
+    <div class="col-2 text-center  ">
+      <button type="submit"   style="background-color:#ff595e ;margin-left: 30px;"  class="btn mt-2 text-light  fw-bold" >Registrar</button>
+    </div>
+    <div><span></span></div>
+  </form>
+
+
+</div>
+
+
+
+
+
+<div class="b-example-divider" style="width:80px"></div>
+
+
+
+<!-- barra opciones -->
+
+<div class="d-flex flex-column   bg-light" style="width: 160px;">
+
+  <div class="d-flex flex-column  h-100 ">
+
+
+
+    <a class="mt-3  text-center text-decoration-none  btn-circle  mx-auto" href="/usuario" style="width: 70px ; height: 70px;">
+      <img  src="https://cdn-icons-png.flaticon.com/512/4939/4939785.png" width="40px" height="40px" alt="">
+    </a>
+
+
+
+  </div>
+
+
+</div>
+
+<script type="text/javascript">
+
+  d=document
+  $tbody = d.getElementsByTagName('tbody')
+
+    // Eliminamos la propiedad required de todos los campos de entrada
+  d.querySelectorAll('input').forEach(function(input) {
+  input.removeAttribute('required');
+  });
+  d.querySelectorAll('select').forEach(function(input) {
+    input.removeAttribute('required');
+  });
+
+  function formReset(){
+    $form = d.getElementById('formAsignar')
+    $form.reset()
+  }
+
+  let listaObjetos = []
+
+
+  function add(){
+    let tr = document.createElement("tr");
+    tr.setAttribute("name", "rows");
+    let $tbody = document.getElementById("tbody");
+    let registro = {}
+    let completed = true
+
+
+    const inputs = document.querySelectorAll('input, select');
+
+
+    inputs.forEach(input => {
+      if (!input.value){
+        completed =false
+      }
+      if (input.tagName = "SELECT" && input.selectedIndex === 0){
+        completed =false
+      }
+      registro[input.name] = input.value
+    });
+
+    // completed ? alert('completed') : alert('uncompleted')
+    if (completed){
+
+      listaObjetos.push(registro);
+      console.log('listado de objetos', listaObjetos)
+
+      let estudiante   = document.createElement("td")
+      let materia      = document.createElement("td");
+      let modalidad     = document.createElement("td");
+      let profesor    = document.createElement("td");
+      let inicio       = document.createElement("td");
+      let fin         = document.createElement("td");
+      let dia         = document.createElement("td");
+      let hora        = document.createElement("td");
+
+      console.log('fecha', registro.Inicio , registro.Fin);
+
+      estudiante.innerHTML = registro.Alumno
+      materia.innerHTML = registro.Materia   
+      modalidad.innerHTML = registro.Modalidad 
+      profesor.innerHTML = registro.Profesor  
+      inicio.innerHTML = registro.Fecha_Inicio
+      fin.innerHTML = registro.Fecha_Fin     
+      dia.innerHTML =  registro.Dia       
+      hora.innerHTML = registro.Hora     
+      
+      tr.appendChild(estudiante)
+      tr.appendChild(profesor)
+      tr.appendChild(modalidad)
+      tr.appendChild(materia)
+      tr.appendChild(hora)
+      tr.appendChild(dia)
+      tr.appendChild(inicio)
+      tr.appendChild(fin)
+
+      console.log('completado' , registro);
+      $tbody.appendChild(tr)
+      console.log($tbody);
+      formReset()
+    }
+
+
+    else{
+      alert('Selecione todos los campos')
+    }
+
+    
+
+
+  }
+
+
+  d.getElementById('form').addEventListener('submit', ()=>{
+      var usuariosJson = JSON.stringify(listaObjetos);
+      document.querySelector("#usuarios").value = usuariosJson;
+  })
+
+</script>
+
+{% if error %}
+<script type="text/javascript">
+
+  //add table
+  
+
+
+
+  // document.getElementById("actModal").click()
+  
+  const inputs = document.querySelectorAll("input");
+  const selects = document.querySelectorAll("select");
+  selects.forEach(select => {
+    select.addEventListener("change", function() {
+      // Elimina la clase que agrega el borde rojo
+      this.parentElement.classList.remove("has-error");
+      this.nextElementSibling.style.display= "none";
+    });
+  });
+  // Agrega un evento de "cambio" a cada uno de los campos de entrada
+  inputs.forEach(input => {
+    input.addEventListener("change", function() {
+      // Elimina la clase que agrega el borde rojo
+      this.parentElement.classList.remove("has-error");
+      this.nextElementSibling.style.display= "none";
+    });
+  });
+</script>  
+{% endif %}
+
+{% if success %}
+  <div id="alertSuccess" class="alertSuccess  w-25 rounded text-center alert alert-success alert-dismissible fade show" role="alert">
+    {{ success }}
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+  </div>
+  <script type="text/javascript">
+    $alert = document.getElementById("alertSuccess")
+    setTimeout( ()=>{
+      $alert.parentNode.removeChild($alert)
+    }, 3000) 
+
+  </script>  
+
+
+
+{% endif %}
+
+
+
+{% endblock %}
+

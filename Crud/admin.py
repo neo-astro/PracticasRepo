@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import usuarios
+from .models import materias, modalidades, usuarios
 from .models import profesores
 from .models import alumnos
 from .models import tpi
@@ -18,4 +18,6 @@ admin.site.register(carrera)
 admin.site.register(pais)
 admin.site.register(provincia)
 admin.site.register(ciudad)
+admin.site.register(modalidades)
+admin.site.register(materias)
 

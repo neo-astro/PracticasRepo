@@ -27,5 +27,10 @@ urlpatterns = [
     path('asignarProfesor/', views.asignarProfesor),
 
 
+    # path('estudiante/horario/tr:id>/', views.estudianteHorario),
+
+    path('horario/<str:id>/', views.horario),
+    path('horarioAsignar/', views.horarioAsignar),
+
 
 ]

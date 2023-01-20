@@ -145,9 +145,19 @@
 
 
       <li class="nav-item">
-        <a href="/" class="nav-link active" aria-current="page">
+        <a href="/" class=" text-center nav-link active bg-primary" aria-current="page">
           <svg class="bi me-2" width="16" height="16"><use xlink:href="#home"/></svg>
           Home
+        </a>
+      </li>
+
+      <li class="nav-item mt-2">
+        
+        <a href="/horarioAsignar" class="text-center nav-link active bg-primary" aria-current="page">
+          <svg class="bi me-2" width="16" height="16"><use xlink:href="#tools"/></svg>
+
+          <!-- <img src="https://cdn-icons-png.flaticon.com/512/6804/6804274.png" class="bi me-2 text" width="16" height="16" alt=""> -->
+          Asignar horario
         </a>
       </li>
 
@@ -164,7 +174,7 @@
 
 
 
-  <div class="b-example-divider" style="width:80px"></div>
+  <div class="b-example-divider firstBar" id="firstBar" style="width:80px"></div>
 
 
   {% block contend %}
@@ -218,7 +228,7 @@
 
 
   {% endblock %}
-  <div class="b-example-divider" style="width:80px"></div>
+  <div class="b-example-divider lastBar" id="lastBar" style="width:80px"></div>
 
 
 </main>

@@ -212,7 +212,7 @@
 }
 
 .campform{
-  min-height:100px;
+  min-height:40px;
 }
 
 
@@ -221,8 +221,8 @@
 
 
 .campform input,select{
-  margin-top: 2px;
-  width: 225px!important;
+  margin-top: 1px;
+  width: 180px!important;
 }
 
 
@@ -265,3 +265,6 @@
 }
 
 
+.time-days{
+  width: 180px;
+}
