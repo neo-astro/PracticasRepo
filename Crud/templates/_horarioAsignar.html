@@ -287,9 +287,30 @@
       registro[input.name] = input.value
     
     });
+    
+    
+    let msmRepetido
+    let datoRep
+
+    if (listaObjetos.length > 0) {
+      console.log('len de listaobjetos',listaObjetos);
+      console.log('verificando tr no repetido objeto',registro);
+      listaObjetos.forEach((e) =>{
+      if (e['Alumno'] == registro['Alumno'] && e['Profesor']==registro['Profesor'] && e['Dia']==registro['Dia'] && e['Hora']==registro['Hora']){
+        datoRep = true
+        msmRepetido = 'El registro a ingresar ya ha sido agregado a la tabla'
+      }
+      else{
+        datoRep= false
+      }
+    })
+    }else{
+      datoRep = false
+    }
+
 
     // completed ? alert('completed') : alert('uncompleted')
-    if (completed){
+    if (completed && datoRep===false){
 
       csrfToken = document.getElementsByName("csrfmiddlewaretoken")[0].value;
       fetch('http://127.0.0.1:8000/horarioEstPro/', {
@@ -298,7 +319,6 @@
         headers:{
           'Content-Type': 'application/json',
           'X-CSRFToken': csrfToken
-
         }
       }).then(res => res.json())
       .then(response => {
@@ -347,6 +367,7 @@
           formReset()
         }
         else {
+
           $errorModal = d.getElementById('ErrorModal')
           $errorModal.innerHTML = response['res']
           d.getElementById('msmErrorModal').click()}
@@ -356,7 +377,14 @@
 
 
     else{
-      d.getElementById('msmModal').click()
+      if(datoRep==true){
+        $errorModal = d.getElementById('ErrorModal')
+        $errorModal.innerHTML = msmRepetido
+        d.getElementById('msmErrorModal').click()
+      }
+      else{
+        d.getElementById('msmModal').click()
+      }
       // alert('Selecione todos los campos')
     }
   }

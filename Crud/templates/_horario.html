@@ -19,172 +19,60 @@
   <div class="list-group list-group-flush border-bottom  bg-light scrollarea h-100">
 
     <!-- elementos usuario -->
-  <table class="table table-light table-bordered">
-    <tr>
-        <th style="border-radius: 14px;"></th>
-        {% for hour in hours %}
-            <th class="text-center" style="min-width:166.69px !important">{{ hour }}</th>
-        {% endfor %}
-    </tr>
-
-    {% for day in days %}
-        <tr > 
-            <th class="fs-10  h-150 align-middle" style="max-width: 75px;">
-              <div class="text-center">              
-                {{ day }}
-              </div>
-            </th>
-            {% for hour in hours %}
-                <td  class="mx-auto w-225 " style="min-width: 120px;  ">
-                    {% for detail in detalle %}
-                        {% if detail.dia == day and detail.hora == hour %}
-
-
-                        <div class="text-center mx-auto" 
-                        style="width: 150px;border-radius: 8px;
-                        background: #f3f3f3;
-                        box-shadow:  8px 8px 18px #c1c1c1,
-                                     -8px -8px 18px #fbfbfb">
-                                    <div class="bg-danger rounded-top">{{ detail.materia }}</div>
-                                    <div class="fs-10">{{detail.profesor }}</div>
-                                    <div class="fs-10">{{ detail.hora}}</div>
-                                    <div class="fs-10">{{ detail.dia}}</div>
-                                    <div class="fs-10">{{detail.modalidad}}</div>
-                                    <div class="fs-10">{{detail.fechaInicio}}-{{detail.fechaFin}}</div>
-                        
-              
-                        </div>
-                          
+    <table class="table table-light table-bordered">
+      <tr>
+          <th style="border-radius: 14px;"></th>
+          {% for hour in hours %}
+              <th class="text-center" style="min-width:166.69px !important">{{ hour }}</th>
+          {% endfor %}
+      </tr>
+  
+      {% for day in days %}
+          <tr > 
+              <th class="fs-10  h-150 align-middle" style="max-width: 75px;">
+                <div class="text-center">              
+                  {{ day }}
+                </div>
+              </th>
+              {% for hour in hours %}
+                  <td  class="mx-auto w-225 " style="min-width: 120px;  ">
+                      {% for detail in detalle %}
+                        {% if detail.Dia == day and detail.Hora|time:"H:i:s" == hour %}
+  
+  
+                          <div class="text-center mx-auto" 
+                          style="width: 150px;border-radius: 8px;
+                          background: #f3f3f3;
+                          box-shadow:  8px 8px 18px #c1c1c1,
+                                       -8px -8px 18px #fbfbfb">
+                            <div class="bg-danger rounded-top">{{ detail.Materia }}</div>
+                            <div class="fs-10">{{detail.Profesor }}</div>
+                            <div class="fs-10">{{ detail.Hora|time:"H:i:s" }}</div>
+                            <div class="fs-10">{{detail.Dia}}</div>
+                            <div class="fs-10">{{detail.Modalidad}}</div>
+                            <div class="fs-10">{{detail.Fecha_Inicio}}-{{detail.Fecha_Fin}}</div>
+                          </div>
+                            
+  
+    
+                        {% endif %}
+                      {% endfor %}
+                  </td>
+              {% endfor %}
+          </tr>
+      {% endfor %}
+    </table>
+  
+  
+  
+  
+  
+  
 
   
-                        {% endif %}
-                    {% endfor %}
-                </td>
-            {% endfor %}
-        </tr>
-    {% endfor %}
-  </table>
 
 
-
-
-
-    <!-- <table class="table table-light table-bordered ">
-      <thead>
-        <tr class="text-center">
-      
-          <th>7:00 - 7:59</th>
-          <th>8:00 - 8:59</th>
-          <th>9:00 - 9:59</th>
-          <th>10:00 - 10:59</th>
-          <th>11:00 - 11:59</th>
-          <th>12:00 - 12:59</th>
-        </tr>
-      </thead>
-      <tbody>
-
-        <tr class="text-center">
-
-          <td>
-            <div class="text-center mx-auto" style="width: 150px;  border-radius: 14px;
-              background: #f2f2f2;
-              box-shadow:  9px 9px 16px #c6c6c6,
-                          -9px -9px 16px #ffffff;">
-              <div class="bg-danger rounded-top">Materia</div>
-              <div>Docente</div>
-              <div>Carrera</div>
-              <div>Presencial</div>
-              <div>2020/1/1 - 2021/1/1</div>
-            </div>
-
-          </td>
-          <td>
-            <div class="text-center mx-auto" style="width: 150px;  border-radius: 14px;
-              background: #f2f2f2;
-              box-shadow:  9px 9px 16px #c6c6c6,
-                          -9px -9px 16px #ffffff;">
-              <div>Materia</div>
-              <div>Docente</div>
-              <div>Carrera</div>
-              <div>Presencial</div>
-              <div>2020/1/1 - 2021/1/1</div>
-            </div>
-
-          </td>
-          <td>
-            <div class="text-center mx-auto" style="width: 150px;  border-radius: 14px;
-              background: #f2f2f2;
-              box-shadow:  9px 9px 16px #c6c6c6,
-                          -9px -9px 16px #ffffff;">
-              <div>Materia</div>
-              <div>Docente</div>
-              <div>Carrera</div>
-              <div>Presencial</div>
-              <div>2020/1/1 - 2021/1/1</div>
-            </div>
-
-          </td>
-          <td>
-            <div class="text-center mx-auto" style="width: 150px;  border-radius: 14px;
-              background: #f2f2f2;
-              box-shadow:  9px 9px 16px #c6c6c6,
-                          -9px -9px 16px #ffffff;">
-              <div>Materia</div>
-              <div>Docente</div>
-              <div>Carrera</div>
-              <div>Presencial</div>
-              <div>2020/1/1 - 2021/1/1</div>
-            </div>
-
-          </td>
-          <td>
-            <div class="text-center mx-auto" style="width: 150px;  border-radius: 14px;
-              background: #f2f2f2;
-              box-shadow:  9px 9px 16px #c6c6c6,
-                          -9px -9px 16px #ffffff;">
-              <div>Materia</div>
-              <div>Docente</div>
-              <div>Carrera</div>
-              <div>Presencial</div>
-              <div>2020/1/1 - 2021/1/1</div>
-            </div>
-
-          </td>
-
-          <td>
-            <div class="text-center mx-auto" style="width: 150px;  border-radius: 14px;
-              background: #f2f2f2;
-              box-shadow:  9px 9px 16px #c6c6c6,
-                          -9px -9px 16px #ffffff;">
-              <div>Materia</div>
-              <div>Docente</div>
-              <div>Carrera</div>
-              <div>Presencial</div>
-              <div>2020/1/1 - 2021/1/1</div>
-            </div>
-
-          </td>
-          <td>
-            <div class="text-center mx-auto" style="width: 150px;  border-radius: 14px;
-              background: #f2f2f2;
-              box-shadow:  9px 9px 16px #c6c6c6,
-                          -9px -9px 16px #ffffff;">
-              <div>Materia</div>
-              <div>Docente</div>
-              <div>Carrera</div>
-              <div>Presencial</div>
-              <div>2020/1/1 - 2021/1/1</div>
-            </div>
-
-          </td>
-
-
-        </tr>
-
-      </tbody>
-    </table> -->
-
-
+  
 
   </div>
 

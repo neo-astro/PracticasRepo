@@ -410,18 +410,20 @@ def asignarProfesor(request):
 
 
 
-def horario(request, id):
-  detalle = [{'fechaIncio':'2020/12/12','fechaFin':'2023/01/01','modalidad':'presencial','materia': 'Matemáticas', 'profesor': 'Juan Pérez', 'hora': '7:00 am', 'dia': 'Martes'},
-             {'fechaIncio':'2020/12/12','fechaFin':'2023/01/01','modalidad':'presencial','materia': 'Física', 'profesor': 'Maria Rodriguez', 'hora': '11:00 am', 'dia': 'Martes'},
-             {'fechaIncio':'2020/12/12','fechaFin':'2023/01/01','modalidad':'presencial','materia': 'Física', 'profesor': 'Maria Rodriguez', 'hora': '11:00 am', 'dia': 'Lunes'},
-             {'fechaIncio':'2020/12/12','fechaFin':'2023/01/01','modalidad':'presencial','materia': 'Química', 'profesor': 'Pedro González', 'hora': '9:00 am', 'dia': 'Lunes'},
-  ]
-  days = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes']
-  hours = ['7:00 am', '8:00 am', '9:00 am', '10:00 am', '11:00 am', '12:00 pm', '1:00 pm']
+def horarioEstudiante(request, id):
 
-  return render(request, '_horario.html', {'detalle': detalle, 'days': days, 'hours': hours} )
+  days = ['Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes']
+  hours = ['07:00:00','08:00:00','09:00:00','10:00:00','11:00:00','12:00:00','13:00:00', '18:00:00','19:00:00','20:00:00','21:00:00','22:00:00']
+  detail = detalle.objects.filter(Alumno = id)
+  return render(request, '_horario.html', {'detalle': detail, 'days': days, 'hours': hours} )
 
 
+def horarioProfesor(request, id):
+
+  days = ['Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes']
+  hours = ['07:00:00','08:00:00','09:00:00','10:00:00','11:00:00','12:00:00','13:00:00', '18:00:00','19:00:00','20:00:00','21:00:00','22:00:00']
+  detail = detalle.objects.filter(Profesor = id)
+  return render(request, '_horario.html', {'detalle': detail, 'days': days, 'hours': hours} )
 
 
 def horarioAsignar(request):
