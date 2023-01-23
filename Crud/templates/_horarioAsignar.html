@@ -14,7 +14,7 @@
 
 
 <!-- contenido estudiante  -->
-<div class="d-flex flex-column align-items-stretch  bg-light" style="width: 750px;">
+<div class="d-flex flex-column align-items-stretch  bg-light" style="width: 1050px;">
 
 
   
@@ -108,6 +108,8 @@
 
 
     <div class="col-12 text-center  ">
+      <a id="msmModal" data-bs-toggle="modal" class="hidden" data-bs-target="#exampleModal1"></a>
+      <a id="msmErrorModal" data-bs-toggle="modal" class="hidden" data-bs-target="#exampleModal2"></a>
       <button type="button"  onclick="add()" style="background-color:#ff595e"  class="btn mt-2 text-light  fw-bold">Agregar</button>
     </div>
     <div><br></div>
@@ -116,28 +118,31 @@
 
 
 
-  <form method="POST" id="form" action="http://127.0.0.1:8000/horarioAsignar/"  class="row"> 
+  <form method="POST" id="form" action="http://127.0.0.1:8000/horarioAsignar/"  class="row m-auto"> 
     {% csrf_token %}
     <input type="hidden" id="usuarios" name="usuarios" value="1">
 
-    <table name="table" class="col-12 table table-info m-5" style="width: 700px !important">
+    <table name="table" class="col-12 table table-info text-center">
       <thead> 
         <tr>
           <th>Estudiante</th>
-          <th>Profesor</th>
           <th>Materia</th>
           <th>Modalidad</th>
-          <th>Hora</th>
+          <th>Profesor</th>
+          <th>Fecha Incio</th>
+          <th>Fecha Fin</th>
           <th>Dia</th>
-          <th>Incio</th>
-          <th>Fin</th>
+          <th>Hora</th>
+          <th>Opciones</th>
         </tr>
 
       </thead>  
       
-      <tbody id="tbody" >
+      <tbody id="tbody" class="text-center">
 
       </tbody>
+
+
     </table>
 
     <div><hr></div>
@@ -154,13 +159,12 @@
 
 
 
-<div class="b-example-divider" style="width:80px"></div>
+<div class="b-example-divider" style="width:20px"></div>
 
 
 
 <!-- barra opciones -->
-
-<div class="d-flex flex-column   bg-light" style="width: 160px;">
+<div class="d-flex flex-column   bg-light" style="width: 90px;">
 
   <div class="d-flex flex-column  h-100 ">
 
@@ -177,9 +181,49 @@
 
 </div>
 
+
+<!-- modal mensaje -->
+
+<div class="modal " id="exampleModal1" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog"  >
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body text-center fw-semibold f-4">
+        Debe seleccionar todos los campos antes de añadir
+        un registro a la tabla. 
+      </div>
+      <div id="confirm" class="modal-footer">
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal " id="exampleModal2" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog"  >
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div id="ErrorModal" class="modal-body text-center fw-semibold f-4">
+        Debe seleccionar todos los campos antes de añadir
+        un registro a la tabla. 
+      </div>
+      <div id="confirm" class="modal-footer">
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
 <script type="text/javascript">
 
+  let listaObjetos = []
+  let index = 0 
   d=document
+
   $tbody = d.getElementsByTagName('tbody')
 
     // Eliminamos la propiedad required de todos los campos de entrada
@@ -195,118 +239,188 @@
     $form.reset()
   }
 
-  let listaObjetos = []
+
+
+  // async function horarioDispo(){
+  //    let x = await fetch('http://127.0.0.1:8000/horarioDispo/', {
+  //     method: 'POST',
+  //     headers: {
+  //       'Content-Type': 'application/json'
+  //     },
+  //     body: JSON.stringify(user)
+  // })
+  // }
 
 
   function add(){
+
     let tr = document.createElement("tr");
+    
     tr.setAttribute("name", "rows");
     let $tbody = document.getElementById("tbody");
     let registro = {}
+    let datoRegistro = {}
     let completed = true
 
 
     const inputs = document.querySelectorAll('input, select');
-
-
     inputs.forEach(input => {
+      
       if (!input.value){
         completed =false
       }
-      if (input.tagName = "SELECT" && input.selectedIndex === 0){
+      
+      if (input.tagName === "SELECT" && input.selectedIndex === 0){
         completed =false
       }
+      
+      console.log(input);
+      (input.tagName === "SELECT") ? datoRegistro[input.name] = input.options[input.selectedIndex].innerHTML : datoRegistro[input.name] = input.value
+      
+      // if (input.tagName === "SELECT") { 
+      //     datoRegistro[input.name] = input.options[input.selectedIndex].innerHTML}
+    
+      // else {
+      //   datoRegistro[input.name] = input.value
+      // }
+
       registro[input.name] = input.value
+    
     });
 
     // completed ? alert('completed') : alert('uncompleted')
     if (completed){
 
-      listaObjetos.push(registro);
-      console.log('listado de objetos', listaObjetos)
+      csrfToken = document.getElementsByName("csrfmiddlewaretoken")[0].value;
+      fetch('http://127.0.0.1:8000/horarioEstPro/', {
+        method: 'POST',
+        body: JSON.stringify(registro),
+        headers:{
+          'Content-Type': 'application/json',
+          'X-CSRFToken': csrfToken
 
-      let estudiante   = document.createElement("td")
-      let materia      = document.createElement("td");
-      let modalidad     = document.createElement("td");
-      let profesor    = document.createElement("td");
-      let inicio       = document.createElement("td");
-      let fin         = document.createElement("td");
-      let dia         = document.createElement("td");
-      let hora        = document.createElement("td");
+        }
+      }).then(res => res.json())
+      .then(response => {
+        if (!response['res'] && response['res']===null){
+            
+          listaObjetos.push(registro);
+          console.log('listado de objetos', listaObjetos)
 
-      console.log('fecha', registro.Inicio , registro.Fin);
+          let estudiante   = document.createElement("td")
+          let profesor    = document.createElement("td");
+          let materia      = document.createElement("td");
+          let modalidad     = document.createElement("td");
+          let hora        = document.createElement("td");
+          let dia         = document.createElement("td");
+          let inicio       = document.createElement("td");
+          let fin         = document.createElement("td");
 
-      estudiante.innerHTML = registro.Alumno
-      materia.innerHTML = registro.Materia   
-      modalidad.innerHTML = registro.Modalidad 
-      profesor.innerHTML = registro.Profesor  
-      inicio.innerHTML = registro.Fecha_Inicio
-      fin.innerHTML = registro.Fecha_Fin     
-      dia.innerHTML =  registro.Dia       
-      hora.innerHTML = registro.Hora     
-      
-      tr.appendChild(estudiante)
-      tr.appendChild(profesor)
-      tr.appendChild(modalidad)
-      tr.appendChild(materia)
-      tr.appendChild(hora)
-      tr.appendChild(dia)
-      tr.appendChild(inicio)
-      tr.appendChild(fin)
 
-      console.log('completado' , registro);
-      $tbody.appendChild(tr)
-      console.log($tbody);
-      formReset()
+          estudiante.innerHTML =  datoRegistro.Alumno
+          materia.innerHTML =     datoRegistro.Materia   
+          modalidad.innerHTML =   datoRegistro.Modalidad 
+          profesor.innerHTML =    datoRegistro.Profesor  
+          inicio.innerHTML =      datoRegistro.Fecha_Inicio
+          fin.innerHTML =         datoRegistro.Fecha_Fin     
+          dia.innerHTML =         datoRegistro.Dia       
+          hora.innerHTML =        datoRegistro.Hora     
+          
+          tr.appendChild(estudiante)
+          tr.appendChild(materia)
+          tr.appendChild(modalidad)
+          tr.appendChild(profesor)
+          tr.appendChild(inicio)
+          tr.appendChild(fin)
+          tr.appendChild(dia)
+          tr.appendChild(hora)
+          tr.innerHTML +=  `<td>  <button    data-index=${index} type="button" id="btnDelete" class="btn m-0 p-0" onClick=delRegisto(this)>
+            <svg class="" width="18px" height="18px">
+                  <use xlink:href="#delete" />
+                </svg>
+            
+            </button>  </td>`
+          index +=1 
+          console.log('numero de lementos lista object:', index)
+          // <svg class="m-0 p-0" width="20px" height="16px"><use xlink:href="#delete" /></svg> 
+          $tbody.appendChild(tr)
+          formReset()
+        }
+        else {
+          $errorModal = d.getElementById('ErrorModal')
+          $errorModal.innerHTML = response['res']
+          d.getElementById('msmErrorModal').click()}
+      }
+      )
     }
 
 
     else{
-      alert('Selecione todos los campos')
+      d.getElementById('msmModal').click()
+      // alert('Selecione todos los campos')
     }
-
-    
-
-
   }
 
-
+//enviar el formulario de la tabla
   d.getElementById('form').addEventListener('submit', ()=>{
       var usuariosJson = JSON.stringify(listaObjetos);
       document.querySelector("#usuarios").value = usuariosJson;
   })
 
+
+  function updateIndexTr(){
+    let btns = d.querySelectorAll('#btnDelete')
+    index= 0
+    btns.forEach(btn =>{
+      btn.setAttribute('data-index', index)
+      index +=1
+    })
+
+  }
+
+  function delRegisto(e){
+    var row = e.parentNode.parentNode;
+    row.remove()
+
+    console.log('numero del la fila eliminado', e.getAttribute("data-index") )
+    listaObjetos.splice(e.getAttribute("data-index"),1)
+    updateIndexTr()
+    console.log('lista de objetos actualizado', listaObjetos);
+  }
+
 </script>
 
-{% if error %}
-<script type="text/javascript">
-
-  //add table
-  
 
 
+<style type="text/css">
+  .lastBar {
+    width: 15px !important;
+  }
 
-  // document.getElementById("actModal").click()
-  
-  const inputs = document.querySelectorAll("input");
-  const selects = document.querySelectorAll("select");
-  selects.forEach(select => {
-    select.addEventListener("change", function() {
-      // Elimina la clase que agrega el borde rojo
-      this.parentElement.classList.remove("has-error");
-      this.nextElementSibling.style.display= "none";
-    });
-  });
-  // Agrega un evento de "cambio" a cada uno de los campos de entrada
-  inputs.forEach(input => {
-    input.addEventListener("change", function() {
-      // Elimina la clase que agrega el borde rojo
-      this.parentElement.classList.remove("has-error");
-      this.nextElementSibling.style.display= "none";
-    });
-  });
-</script>  
+  .firstBar {
+    width: 20px !important;
+  }
+</style>
+
+
+{% if msmAsignado %}
+<div id="alertSuccess" class="alertSuccess  w-25 rounded text-center alert alert-success alert-dismissible fade show" role="alert">
+     {{ msmAsignado }}
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+  </div>
+  <script type="text/javascript">
+    $alert = document.getElementById("alertSuccess")
+    setTimeout( ()=>{
+      $alert.parentNode.removeChild($alert)
+    }, 4000) 
+  </script>  
 {% endif %}
+
+
+
+
+
+
 
 {% if success %}
   <div id="alertSuccess" class="alertSuccess  w-25 rounded text-center alert alert-success alert-dismissible fade show" role="alert">

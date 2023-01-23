@@ -2,8 +2,9 @@ import json
 from django.contrib.auth import login, authenticate
 from django.shortcuts import HttpResponse, redirect, render,get_object_or_404
 #from django.forms import modelform_factory
+from django.http import JsonResponse
 
-from Crud.models import profesoresForm, tpi,detalle, usuarios,usuariosForm,provincia,ciudad,alumnosForm,alumnos,carrera,profesores,profesoresForm,detalleForm
+from Crud.models import profesoresForm, tpi,detalle, usuarios,usuariosForm,provincia,ciudad,alumnosForm,alumnos,carrera,profesores,profesoresForm,detalleForm,materias,modalidades
 
 # from Crud.models import  usuarios,tpi
 
@@ -425,10 +426,26 @@ def horario(request, id):
 
 def horarioAsignar(request):
   if request.method == 'POST':
-    print(request.POST)
-    return HttpResponse('e')
+    print('llego al post', request.POST.get('usuarios'))
+    registros = json.loads(request.POST.get('usuarios'))
+
+    for ele in registros:
+          #instanciar objetos
+      alumno = alumnos.objects.get( pk =      int(ele.get('Alumno'))) 
+      profesor = profesores.objects.get( pk = int(ele.get('Profesor'))) 
+      materia = materias.objects.get( pk =     int(ele.get('Materia'))) 
+      modalidad = modalidades.objects.get( pk = int(ele.get('Modalidad'))) 
+      detalle.objects.create(Alumno = alumno,Profesor = profesor,Materia = materia,Modalidad=modalidad,Hora=ele.get('Hora'),Dia=ele.get('Dia'),Fecha_Inicio=ele.get('Fecha_Inicio'),Fecha_Fin=ele.get('Fecha_Fin'))
+    
+    request.session['msmAsignado'] = 'Registros generados con exito'
+    return redirect('horarioAsignar')
+
+
   form = detalleForm()
-  return render(request,'_horarioAsignar.html',{'form': form})
+  msmAsignado = request.session.get('msmAsignado')
+  if request.session.get('msmAsignado'):
+    del request.session['msmAsignado']
+  return render(request,'_horarioAsignar.html',{'form': form,'msmAsignado':msmAsignado})
 
 
 
@@ -452,3 +469,25 @@ def updateHorario(request,id):
   # formProfesor.fields['Estado'].initial = profesor.Estado
 
   return render(request, '_profesorUpdate.html',{'form': detalleForm,'id':detal.id})    
+
+
+
+def horarioEstPro(request):
+  if request.method == 'POST':
+      data = json.loads(request.body)
+      print('data',data)
+      dia = data['Dia']
+      hora = data['Hora']
+      msm=None
+      print('hora a consultar', hora)
+      profesor =   detalle.objects.filter(Profesor =     data['Profesor'],  Dia=dia ,Hora=hora )
+      estudiante = detalle.objects.filter(Alumno    =    data['Alumno']  , Dia=dia  ,Hora=hora )
+
+      if (estudiante):
+        msm= 'El estudiante ya tiene asiganada una clase para esa hora'
+      if(profesor):
+        msm= 'El estudiante ya tiene asiganada una clase para esa hora'
+      if (profesor and estudiante):
+        msm='Tanto el estudiante como el docente poseen clases a esa hora'
+
+      return JsonResponse({"res": msm})

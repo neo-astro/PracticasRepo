@@ -7,6 +7,7 @@ from .models import carrera
 from .models import pais
 from .models import provincia
 from .models import ciudad
+from .models import detalle
 
 # Register your models here.
 
@@ -20,4 +21,5 @@ admin.site.register(provincia)
 admin.site.register(ciudad)
 admin.site.register(modalidades)
 admin.site.register(materias)
+admin.site.register(detalle)
 

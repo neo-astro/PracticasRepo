@@ -30,7 +30,8 @@ urlpatterns = [
     # path('estudiante/horario/tr:id>/', views.estudianteHorario),
 
     path('horario/<str:id>/', views.horario),
-    path('horarioAsignar/', views.horarioAsignar),
+    path('horarioAsignar/', views.horarioAsignar,name='horarioAsignar'),
+    path('horarioEstPro/', views.horarioEstPro)
 
 
 ]

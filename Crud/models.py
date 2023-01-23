@@ -261,7 +261,10 @@ class detalleForm(forms.ModelForm):
         model = detalle
         fields = ['Alumno', 'Profesor', 'Materia', 'Modalidad', 'Hora', 'Dia', 'Fecha_Inicio', 'Fecha_Fin']
 
-
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        active_profs = profesores.objects.filter(Estado=True)
+        self.fields['Profesor'].queryset = active_profs
 
 
 
